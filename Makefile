@@ -3,7 +3,7 @@ CXXFLAGS = -std=c++17 -g -O0 -w -I/usr/include/boost -Wno-deprecated-declaration
 LDFLAGS = -lboost_system -lpthread -lssl -lcrypto
 
 # 定义目标文件
-TARGET = client
+TARGET = send
 
 # 定义源文件
 SRC = $(wildcard *.cpp **/*.cpp)
