@@ -7,11 +7,11 @@
 #include "FileHandler.h"
 #include "NetworkHandler.h"
 
-class FileSend
+class FileSender
 {
 public:
-    static std::unique_ptr<FileSend> createNew(std::string server, int port, fs::path dir_path);
-    FileSend(std::string server, int port, fs::path dir_path);
+    static std::unique_ptr<FileSender> createNew(std::string server, int port, fs::path dir_path);
+    FileSender(std::string server, int port, fs::path dir_path);
     bool start();
 
 private:

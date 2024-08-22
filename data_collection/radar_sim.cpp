@@ -91,14 +91,14 @@ void savePointCloudData(const std::string& base_dir, int num_points, int frequen
     }
 }
 
-int main() {
-    // 可调整的参数
-    std::string base_dir = "radar_sim";
-    int num_points = 1000;       // 点的数量
-    int frequency = 5;           // 采集频率（每秒采集次数）
-    int duration_seconds = 10;   // 采集持续时间（秒）
+// int main() {
+//     // 可调整的参数
+//     std::string base_dir = "radar_sim";
+//     int num_points = 1000;       // 点的数量
+//     int frequency = 5;           // 采集频率（每秒采集次数）
+//     int duration_seconds = 10;   // 采集持续时间（秒）
 
-    savePointCloudData(base_dir, num_points, frequency, duration_seconds);
+//     savePointCloudData(base_dir, num_points, frequency, duration_seconds);
 
-    return 0;
-}
+//     return 0;
+// }

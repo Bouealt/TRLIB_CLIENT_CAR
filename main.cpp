@@ -1,13 +1,19 @@
-#include "file_transfer/FileSend.h"
+#include "file_transfer/FileSender.h"
+#include "data_collection/DataCollector.h"
 
 std::string server = "tstit.x3322.net";
 int port = 12345;
-fs::path dir_path = "/mnt/hgfs/DataSet/B";
+fs::path dir_path = "./data_collection/dataCapture";
 
 int main()
 {
-   
-    std::unique_ptr<FileSend> file_send = file_send->createNew(server, port, dir_path);
+    std::unique_ptr<FileSender> file_send = file_send->createNew(server, port, dir_path);
+    std::unique_ptr<DataCollector> data_collector = data_collector->createNew();
+    if(!data_collector->start(60))
+    {
+        std::cerr << "Error: DataCollector failed." << std::endl;
+        return 0;
+    }
     if (!file_send->start())
     {
         std::cerr << "Error: FileSend failed." << std::endl;
