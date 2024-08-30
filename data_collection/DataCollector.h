@@ -12,10 +12,12 @@ class DataCollector
 public:
     static std::unique_ptr<DataCollector> createNew();
     DataCollector();
+    ~DataCollector();
     bool start(int totalSeconds);
 
 private:
-
+    std::unique_ptr<PerceptionDeviceManager> m_PDmanager;
+    std::unique_ptr<CameraThreadManager> m_threadManager;
 
 };
 

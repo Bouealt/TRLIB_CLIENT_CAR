@@ -11,6 +11,9 @@
 #include <string>
 #include <iostream>
 #include <thread>
+#include <atomic>
+#include <functional>
+#include <mutex>
 #include <opencv2/opencv.hpp>
 
 // 感知设备管理类
@@ -37,6 +40,9 @@ private:
 
     mutable std::mutex devicesMutex;    // 互斥锁
     std::thread detectionThread;
+
+    std::atomic<bool> stopRequested;         // 控制线程退出的标志变量
+
     bool InitPDManager = true;  // 是否是实例化对象
 
     void detectDevices();      // 设备检测函数，在独立线程中运行

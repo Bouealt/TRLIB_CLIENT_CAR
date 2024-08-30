@@ -6,6 +6,7 @@ CameraThreadManager::CameraThreadManager(const std::vector<std::string>& deviceP
 
 CameraThreadManager::~CameraThreadManager() {
     stop();
+    std::cout << "CameraThreadManager destroyed" << std::endl;
 }
 
 void CameraThreadManager::start() {
