@@ -1,0 +1,8 @@
+TRLIB_CAR_CLIENT
+
+终端按顺序运行
+rm -rf build
+mkdir build
+cd build
+cmake ..
+make（这一步可改为，点击VScode左下角的build按钮（有齿轮的ICON）
