@@ -148,14 +148,14 @@ void CameraThreadManager::saveFramesWorker(std::queue<std::pair<cv::Mat, int>>& 
         std::unique_lock<std::mutex> lock(queueMutex);
 
         // 增加日志，查看是否卡在等待中
-        std::cout << "saveFramesWorker() Thread " << threadIndex << " waiting for data or shutdown signal." << std::endl;
+        // std::cout << "saveFramesWorker() Thread " << threadIndex << " waiting for data or shutdown signal." << std::endl;
 
         // 等待条件：frameQueue 非空，或者 saveThreadsRunning[threadIndex] 为 false（表示需要停止线程）
         dataCondition.wait(lock, [&frameQueue, this, threadIndex] {
             return !frameQueue.empty() || !saveThreadsRunning[threadIndex];
             });
 
-        std::cout << "saveFramesWorker() Thread " << threadIndex << " woke up." << std::endl;
+        // std::cout << "saveFramesWorker() Thread " << threadIndex << " woke up." << std::endl;
         // 如果线程需要停止并且队列为空，退出循环
         if (!saveThreadsRunning[threadIndex] && frameQueue.empty()) {
             break;
@@ -184,33 +184,36 @@ std::string CameraThreadManager::getCurrentDateTimeString() {
     // 将时间信息格式化为字符串
     std::stringstream ss;
     ss << std::put_time(&tm, "%Y-%m-%d/%H-%M-%S") << '-' << std::setfill('0') << std::setw(3) << now_ms.count();
-    std::cout << ss.str() << std::endl;     // 打印当前的时间，时-分-秒-毫秒
+    // std::cout << ss.str() << std::endl;     // 打印当前的时间，时-分-秒-毫秒
     return ss.str();
 }
 
 void CameraThreadManager::saveFrames(std::queue<std::pair<cv::Mat, int>>& frameQueue, const std::string& currentDateTime, const std::string& cameraName) {
     std::string baseDir = "."; // 假设程序当前目录为基础目录
     std::string carNumber = "0001";
-    
+    std::string curDateTime = currentDateTime.substr(0, 19);
+    std::string msTime = currentDateTime.substr(20, 23); // 切割出毫秒
 
     static std::string preDataTime = "";
-    static int frameNum = 1; // 序号，这里原本使用来对每秒的截图进行编号的，现在使用时间戳，就不能使用这个序号
-    if (preDataTime != currentDateTime) {
-        preDataTime = currentDateTime;
-        frameNum = 1;
-    }
-    else {
-        frameNum++;
-    }
+    // static int frameNum = 1; // 序号，这里原本使用来对每秒的截图进行编号的，现在使用时间戳，就不能使用这个序号
+    // if (preDataTime != currentDateTime) {
+    //     preDataTime = currentDateTime;
+    //     frameNum = 1;
+    // }
+    // else {
+    //     frameNum++;
+    // }
 
-    std::string folderPath = baseDir + "/dataCapture/Car" + carNumber + "/" + currentDateTime + "/" + cameraName;
+    //std::string folderPath = baseDir + "/dataCapture/Car" + carNumber + "/" + currentDateTime + "/" + cameraName;
+    std::string folderPath = baseDir + "/dataCapture/Car" + carNumber + "/" + curDateTime ;
     fs::create_directories(folderPath);
 
     while (!frameQueue.empty()) {
         auto [frame, frameNumber] = frameQueue.front();
         frameQueue.pop();
 
-        std::string filename = folderPath + "/frame" + std::to_string(frameNum) + ".jpg";
+        // std::string filename = folderPath + "/Frame" + std::to_string(frameNum) + ".jpg";
+        std::string filename = folderPath + "/" + cameraName + "-" + msTime + ".jpg";
         cv::imwrite(filename, frame);
         std::cout << "Saved " << filename << std::endl;
     }
