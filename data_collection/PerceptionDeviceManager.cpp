@@ -17,6 +17,7 @@
 PerceptionDeviceManager::PerceptionDeviceManager() {
     // 启动检测线程
     detectionThread = std::thread(&PerceptionDeviceManager::detectDevices, this);
+    std::this_thread::sleep_for(std::chrono::seconds(2)); // 主线程暂停2s，使设备初始话
 }
 
 // 析构函数，确保线程退出

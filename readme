@@ -6,3 +6,16 @@ mkdir build
 cd build
 cmake ..
 make（这一步可改为，点击VScode左下角的build按钮（有齿轮的ICON）
+
+24年9月1日
+在NewSavePathExploitation0901分支中进修改
+本分支的任务：
+1、修改路径与服务器匹配
+    /mnt/hgfs/share/DataSet/02/2019-08-10/11-08-01-500/outside.png
+    客户端数据位置暂时还是放在./DataSet/02/2019-08-10/11-08-01-500/outside.png
+    精细化分组，如规定Video0是前摄像头，Video2是后摄像头
+    同一时间的前后摄像头和激光雷达文件在一个文件夹下
+    文件夹的时间精度达到百毫秒级别
+
+后续任务：
+    向管理类添加施加管理接口和模版

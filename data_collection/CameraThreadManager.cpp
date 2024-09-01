@@ -172,23 +172,29 @@ void CameraThreadManager::saveFramesWorker(std::queue<std::pair<cv::Mat, int>>& 
 }
 
 std::string CameraThreadManager::getCurrentDateTimeString() {
+    // 获取当前时间点
     auto now = std::chrono::system_clock::now();
     auto now_time_t = std::chrono::system_clock::to_time_t(now);
+    auto now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
+
+    // 获取当前时间的tm结构
     std::tm tm;
     localtime_r(&now_time_t, &tm);
 
+    // 将时间信息格式化为字符串
     std::stringstream ss;
-    ss << std::put_time(&tm, "%Y-%m-%d/%H-%M-%S");
-
+    ss << std::put_time(&tm, "%Y-%m-%d/%H-%M-%S") << '-' << std::setfill('0') << std::setw(3) << now_ms.count();
+    std::cout << ss.str() << std::endl;     // 打印当前的时间，时-分-秒-毫秒
     return ss.str();
 }
 
 void CameraThreadManager::saveFrames(std::queue<std::pair<cv::Mat, int>>& frameQueue, const std::string& currentDateTime, const std::string& cameraName) {
     std::string baseDir = "."; // 假设程序当前目录为基础目录
     std::string carNumber = "0001";
+    
 
     static std::string preDataTime = "";
-    static int frameNum = 1; // 序号
+    static int frameNum = 1; // 序号，这里原本使用来对每秒的截图进行编号的，现在使用时间戳，就不能使用这个序号
     if (preDataTime != currentDateTime) {
         preDataTime = currentDateTime;
         frameNum = 1;
