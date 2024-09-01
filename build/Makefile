@@ -153,6 +153,30 @@ data_collection/CameraThreadManager.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/VehicleClient.dir/build.make CMakeFiles/VehicleClient.dir/data_collection/CameraThreadManager.cpp.s
 .PHONY : data_collection/CameraThreadManager.cpp.s
 
+data_collection/DataCollectionTask.o: data_collection/DataCollectionTask.cpp.o
+.PHONY : data_collection/DataCollectionTask.o
+
+# target to build an object file
+data_collection/DataCollectionTask.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VehicleClient.dir/build.make CMakeFiles/VehicleClient.dir/data_collection/DataCollectionTask.cpp.o
+.PHONY : data_collection/DataCollectionTask.cpp.o
+
+data_collection/DataCollectionTask.i: data_collection/DataCollectionTask.cpp.i
+.PHONY : data_collection/DataCollectionTask.i
+
+# target to preprocess a source file
+data_collection/DataCollectionTask.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VehicleClient.dir/build.make CMakeFiles/VehicleClient.dir/data_collection/DataCollectionTask.cpp.i
+.PHONY : data_collection/DataCollectionTask.cpp.i
+
+data_collection/DataCollectionTask.s: data_collection/DataCollectionTask.cpp.s
+.PHONY : data_collection/DataCollectionTask.s
+
+# target to generate assembly for a file
+data_collection/DataCollectionTask.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VehicleClient.dir/build.make CMakeFiles/VehicleClient.dir/data_collection/DataCollectionTask.cpp.s
+.PHONY : data_collection/DataCollectionTask.cpp.s
+
 data_collection/DataCollector.o: data_collection/DataCollector.cpp.o
 .PHONY : data_collection/DataCollector.o
 
@@ -273,6 +297,30 @@ file_transfer/FileSender.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/VehicleClient.dir/build.make CMakeFiles/VehicleClient.dir/file_transfer/FileSender.cpp.s
 .PHONY : file_transfer/FileSender.cpp.s
 
+file_transfer/FileSendingTask.o: file_transfer/FileSendingTask.cpp.o
+.PHONY : file_transfer/FileSendingTask.o
+
+# target to build an object file
+file_transfer/FileSendingTask.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VehicleClient.dir/build.make CMakeFiles/VehicleClient.dir/file_transfer/FileSendingTask.cpp.o
+.PHONY : file_transfer/FileSendingTask.cpp.o
+
+file_transfer/FileSendingTask.i: file_transfer/FileSendingTask.cpp.i
+.PHONY : file_transfer/FileSendingTask.i
+
+# target to preprocess a source file
+file_transfer/FileSendingTask.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VehicleClient.dir/build.make CMakeFiles/VehicleClient.dir/file_transfer/FileSendingTask.cpp.i
+.PHONY : file_transfer/FileSendingTask.cpp.i
+
+file_transfer/FileSendingTask.s: file_transfer/FileSendingTask.cpp.s
+.PHONY : file_transfer/FileSendingTask.s
+
+# target to generate assembly for a file
+file_transfer/FileSendingTask.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VehicleClient.dir/build.make CMakeFiles/VehicleClient.dir/file_transfer/FileSendingTask.cpp.s
+.PHONY : file_transfer/FileSendingTask.cpp.s
+
 file_transfer/NetworkHandler.o: file_transfer/NetworkHandler.cpp.o
 .PHONY : file_transfer/NetworkHandler.o
 
@@ -321,6 +369,30 @@ main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/VehicleClient.dir/build.make CMakeFiles/VehicleClient.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+shared/SharedQueue.o: shared/SharedQueue.cpp.o
+.PHONY : shared/SharedQueue.o
+
+# target to build an object file
+shared/SharedQueue.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VehicleClient.dir/build.make CMakeFiles/VehicleClient.dir/shared/SharedQueue.cpp.o
+.PHONY : shared/SharedQueue.cpp.o
+
+shared/SharedQueue.i: shared/SharedQueue.cpp.i
+.PHONY : shared/SharedQueue.i
+
+# target to preprocess a source file
+shared/SharedQueue.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VehicleClient.dir/build.make CMakeFiles/VehicleClient.dir/shared/SharedQueue.cpp.i
+.PHONY : shared/SharedQueue.cpp.i
+
+shared/SharedQueue.s: shared/SharedQueue.cpp.s
+.PHONY : shared/SharedQueue.s
+
+# target to generate assembly for a file
+shared/SharedQueue.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VehicleClient.dir/build.make CMakeFiles/VehicleClient.dir/shared/SharedQueue.cpp.s
+.PHONY : shared/SharedQueue.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -333,6 +405,9 @@ help:
 	@echo "... data_collection/CameraThreadManager.o"
 	@echo "... data_collection/CameraThreadManager.i"
 	@echo "... data_collection/CameraThreadManager.s"
+	@echo "... data_collection/DataCollectionTask.o"
+	@echo "... data_collection/DataCollectionTask.i"
+	@echo "... data_collection/DataCollectionTask.s"
 	@echo "... data_collection/DataCollector.o"
 	@echo "... data_collection/DataCollector.i"
 	@echo "... data_collection/DataCollector.s"
@@ -348,12 +423,18 @@ help:
 	@echo "... file_transfer/FileSender.o"
 	@echo "... file_transfer/FileSender.i"
 	@echo "... file_transfer/FileSender.s"
+	@echo "... file_transfer/FileSendingTask.o"
+	@echo "... file_transfer/FileSendingTask.i"
+	@echo "... file_transfer/FileSendingTask.s"
 	@echo "... file_transfer/NetworkHandler.o"
 	@echo "... file_transfer/NetworkHandler.i"
 	@echo "... file_transfer/NetworkHandler.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... shared/SharedQueue.o"
+	@echo "... shared/SharedQueue.i"
+	@echo "... shared/SharedQueue.s"
 .PHONY : help
 
 

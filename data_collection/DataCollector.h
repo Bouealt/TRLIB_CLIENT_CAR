@@ -13,7 +13,7 @@ public:
     static std::unique_ptr<DataCollector> createNew();
     DataCollector();
     ~DataCollector();
-    bool start(int totalSeconds);
+    bool DataCollectorLoopStart(void );
 
 private:
     std::unique_ptr<PerceptionDeviceManager> m_PDmanager;

@@ -1,9 +1,11 @@
 #include <sys/stat.h>
 #include <iostream>
 #include <fstream>
+#include <vector>
 #include <string>
 #include <thread>
 #include <chrono>
+#include <mutex>
 #include <opencv2/opencv.hpp>
 #include "PerceptionDeviceManager.h"
 #include <sys/inotify.h> // inotify 是一个强大的 Linux 内核子系统，它可以监听文件系统事件，如创建、删除、修改等。
@@ -14,18 +16,16 @@ PerceptionDeviceManager::PerceptionDeviceManager()
 {
     // 启动检测线程
     detectionThread = std::thread(&PerceptionDeviceManager::detectDevices, this);
-    std::this_thread::sleep_for(std::chrono::seconds(2));
+    std::this_thread::sleep_for(std::chrono::seconds(2)); // 暂停2s，使设备初始化完成
 }
 
 // 析构函数，确保线程退出
 PerceptionDeviceManager::~PerceptionDeviceManager()
 {
-    stopRequested = true; // 请求停止线程
     if (detectionThread.joinable())
     {
         detectionThread.join();
     }
-    std::cout << "PerceptionDeviceManager destroyed." << std::endl;
 }
 
 // 打印所有检测到的设备
@@ -182,46 +182,32 @@ void PerceptionDeviceManager::detectDevices()
 
         std::cout << "Waiting for device changes..." << std::endl;
 
-        // 使用 select 函数设置超时，以避免阻塞
-        fd_set fds;
-        FD_ZERO(&fds);
-        FD_SET(inotifyFd, &fds);
-        struct timeval timeout = {1, 0}; // 1秒超时
-
-        int ret = select(inotifyFd + 1, &fds, nullptr, nullptr, &timeout);
-        if (ret > 0 && FD_ISSET(inotifyFd, &fds))
+        char buffer[1024];
+        int length = read(inotifyFd, buffer, sizeof(buffer)); // 阻塞等待事件发生
+        if (length < 0)
         {
-            char buffer[1024];
-            int length = read(inotifyFd, buffer, sizeof(buffer)); // 阻塞等待事件发生
-            if (length < 0)
-            {
-                std::cerr << "inotify read error" << std::endl;
-                break; // 错误发生，退出循环
-            }
-
-            struct inotify_event *event = (struct inotify_event *)&buffer[0];
-            while (length > 0)
-            {
-                if (event->len)
-                { 
-                    if (event->mask & IN_CREATE)
-                    {
-                        std::cout << "New device added: " << event->name << std::endl;
-                    }
-                    else if (event->mask & IN_DELETE)
-                    {
-                        std::cout << "Device removed: " << event->name << std::endl;
-                    }
-                }
-
-                length -= sizeof(struct inotify_event) + event->len;
-                event = (struct inotify_event *)((char *)event + sizeof(struct inotify_event) + event->len);
-            }
+            std::cerr << "inotify read error" << std::endl;
+            break; // 错误发生，退出循环
         }
 
-        if (stopRequested)
-        { // 检查是否请求停止
-            break;
+        // 处理事件
+        struct inotify_event *event = (struct inotify_event *)&buffer[0];
+        while (length > 0)
+        {
+            if (event->len)
+            {
+                if (event->mask & IN_CREATE)
+                {
+                    std::cout << "New device added: " << event->name << std::endl;
+                }
+                else if (event->mask & IN_DELETE)
+                {
+                    std::cout << "Device removed: " << event->name << std::endl;
+                }
+            }
+
+            length -= sizeof(struct inotify_event) + event->len;
+            event = (struct inotify_event *)((char *)event + sizeof(struct inotify_event) + event->len);
         }
 
         // 稍作休眠后再次检测

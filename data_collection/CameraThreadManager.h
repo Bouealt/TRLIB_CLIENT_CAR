@@ -8,6 +8,7 @@
 #include <condition_variable>
 #include <chrono>
 #include <filesystem>
+#include "../shared/SharedQueue.h"
 
 namespace fs = std::filesystem;
 
@@ -47,8 +48,9 @@ private:
     std::mutex queueMutex;// 互斥锁
     std::condition_variable dataCondition;  // 条件变量
     bool keepRunning = true;    // 控制线程的运行状态
+    std::vector<bool> saveThreadsRunning; // 用于标志保存线程的运行状态
 
     std::vector<ThreadInfo> threadInfoList; // 用于保存线程 ID 和设备 ID 的列表
-
+    std::string carNumber = "0001"; // 车辆编号
 
 };
