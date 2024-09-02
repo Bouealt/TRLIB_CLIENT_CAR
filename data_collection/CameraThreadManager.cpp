@@ -224,13 +224,8 @@ void CameraThreadManager::saveFrames(std::queue<std::pair<cv::Mat, int>> &frameQ
     //     frameNum++;
     // }
 
-<<<<<<< HEAD
     //std::string folderPath = baseDir + "/dataCapture/Car" + carNumber + "/" + currentDateTime + "/" + cameraName;
     std::string folderPath = baseDir + "/dataCapture/Car" + carNumber + "/" + curDateTime ;
-=======
-    // std::string folderPath = baseDir + "/dataCapture/Car" + carNumber + "/" + currentDateTime + "/" + cameraName;
-    std::string folderPath = baseDir + "/dataCapture/Car" + carNumber + "/" + curDateTime;
->>>>>>> 523c221944af49e9565fee19a0b926bd35525a30
     fs::create_directories(folderPath);
 
     while (!frameQueue.empty())
