@@ -235,6 +235,8 @@ void CameraThreadManager::saveFrames(std::queue<std::pair<cv::Mat, int>> &frameQ
 >>>>>>> 56bf281 (2024.09.02 19:02)
     fs::create_directories(folderPath);
 
+    static int CutScreenCount = 0;
+
     while (!frameQueue.empty())
     {
         auto [frame, frameNumber] = frameQueue.front();
@@ -243,7 +245,14 @@ void CameraThreadManager::saveFrames(std::queue<std::pair<cv::Mat, int>> &frameQ
         // std::string filename = folderPath + "/Frame" + std::to_string(frameNum) + ".jpg";
         std::string filename = folderPath + "/" + cameraName + "-" + msTime + ".jpg";
         cv::imwrite(filename, frame);
-        std::cout << "Saved " << filename << std::endl;
+        // std::cout << "Saved " << filename << std::endl; // 打印每一次的保存信息
+        CutScreenCount++;
+        if(20 == CutScreenCount){
+            /* 设置每20次截图保存打印一次信息 */
+            CutScreenCount = 0;
+            std::cout << "20 Frames had saved! ..." << std::endl;
+            std::cout << "Lastest Frame is Saved " << filename << std::endl;
+        }
     }
     // 推送保存的目录路径到共享队列，并通知发送模块
     {
