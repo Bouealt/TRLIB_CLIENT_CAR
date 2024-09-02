@@ -226,13 +226,7 @@ void CameraThreadManager::saveFrames(std::queue<std::pair<cv::Mat, int>> &frameQ
 
     //std::string folderPath = baseDir + "/dataCapture/Car" + carNumber + "/" + currentDateTime + "/" + cameraName;
     std::string folderPath = baseDir + "/dataCapture/Car" + carNumber + "/" + curDateTime ;
-<<<<<<< HEAD
-=======
-    // std::string folderPath = baseDir + "/dataCapture/Car" + carNumber + "/" + currentDateTime + "/" + cameraName;
-    std::string folderPath = baseDir + "/dataCapture/Car" + carNumber + "/" + curDateTime;
->>>>>>> 523c221 (2024.09.01 21:48)
-=======
->>>>>>> 56bf281 (2024.09.02 19:02)
+
     fs::create_directories(folderPath);
 
     static int CutScreenCount = 0;

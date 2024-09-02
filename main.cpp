@@ -61,10 +61,11 @@ int main()
             // 测试时使用，持续10s
             testTime--;
             if(0 == testTime){
-                std::cout<<"Main Program is ending ! 10s Arrived ！" << std::endl;
+                std::cout<<"Main Program is ending ! 10s Arrived !" << std::endl;
                 testFlag = false;
                 std::cout<<"Main Program is waiting for 5 seconds to Stop ! " << std::endl;
                 std::this_thread::sleep_for(std::chrono::seconds(5));
+                std::cout<<"5 seconds to Over ! " << std::endl;
             }
         }
     }
