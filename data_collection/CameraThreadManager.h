@@ -8,6 +8,7 @@
 #include <condition_variable>
 #include <chrono>
 #include <filesystem>
+#include "../shared/SharedQueue.h"
 
 namespace fs = std::filesystem;
 

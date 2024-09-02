@@ -1,16 +1,16 @@
 #include "FileSender.h"
 
-std::unique_ptr<FileSender> FileSender::createNew(std::string server, int port, fs::path dir_path)
+std::unique_ptr<FileSender> FileSender::createNew(std::string server, int port)
 {
-    return std::make_unique<FileSender>(server, port, dir_path);
+    return std::make_unique<FileSender>(server, port);
 }
 
-FileSender::FileSender(std::string server, int port, fs::path dir_path)
-    : server_(server), port_(port), dir_path_(dir_path)
+FileSender::FileSender(std::string server, int port)
+    : server_(server), port_(port)
 {
 }
 
-bool FileSender::start()
+bool FileSender::start(fs::path dir_path)
 {
     try
     {
@@ -22,7 +22,7 @@ bool FileSender::start()
             return false;
         }
         // 遍历目录并处理每个文件
-        for (const auto &entry : fs::recursive_directory_iterator(dir_path_))
+        for (const auto &entry : fs::recursive_directory_iterator(dir_path))
         {
             if (fs::is_regular_file(entry))
             {

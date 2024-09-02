@@ -1,45 +1,40 @@
-#include "file_transfer/FileSender.h"
-#include "data_collection/DataCollector.h"
+#include "file_transfer/FileSendingTask.h"
+#include "data_collection/DataCollectionTask.h"
+#include "shared/SharedQueue.h"
 
 std::string server = "tstit.x3322.net";
 int port = 12345;
-fs::path dir_path = "./data_collection/dataCapture";
 
 int main()
 {
-    /* std::unique_ptr æ™ºèƒ½æŒ‡é’ˆï¼Œç®¡ç†åŠ¨æ€åˆ†é…çš„å¯¹è±¡ */
-    /* 
-    *  data_collector::createNew()é™æ€æˆå‘˜å‡½æ•°ï¼Œåˆ›å»ºäº†ä¸€ä¸ªdata_collectorå¯¹è±¡ï¼Œ
-    *  åŒ…è£…åœ¨ä¸€ä¸ª std::unique_ptr ä¸­è¿”å› 
-    *  std::unique_ptr è¢«ç”¨æ¥åˆå§‹åŒ– data_collector
-    */
-     std::unique_ptr<DataCollector> data_collector = DataCollector::createNew();
-    if (!data_collector->DataCollectorLoopStart())
-    {
-        std::cerr << "Error: DataCollector failed." << std::endl;
-        return 0;
-    }
+    /* std::unique_ptr ÖÇÄÜÖ¸Õë£¬¹ÜÀí¶¯Ì¬·ÖÅäµÄ¶ÔÏó */
+    /*
+     *  data_collector::createNew()¾²Ì¬³ÉÔ±º¯Êı£¬´´½¨ÁËÒ»¸ödata_collector¶ÔÏó£¬
+     *  °ü×°ÔÚÒ»¸ö std::unique_ptr ÖĞ·µ»Ø
+     *  std::unique_ptr ±»ÓÃÀ´³õÊ¼»¯ data_collector
+     */
 
-    while (true) {
+    // ´´½¨²¢Æô¶¯Êı¾İ²É¼¯Ïß³Ì
+    std::thread dataCollectionThread(dataCollectionTask);
+    // ´´½¨²¢Æô¶¯ÎÄ¼ş·¢ËÍÏß³Ì
+    std::thread fileSenderThread(fileSendingTask, server, port);
+
+    while (true)
+    {
         std::cout << "main() running 10s main() Programme" << std::endl;
 
-        std::this_thread::sleep_for(std::chrono::seconds(10)); // ä¸»çº¿ç¨‹æ¯10ç§’æ‰“å°ä¸€æ¬¡æ£€æµ‹ç»“æœ
+        std::this_thread::sleep_for(std::chrono::seconds(10)); // Ö÷Ïß³ÌÃ¿10Ãë´òÓ¡Ò»´Î¼ì²â½á¹û
         /*
-        * std::this_thread::sleep_for:ä½¿å½“å‰çº¿ç¨‹æš‚åœæ‰§è¡ŒæŒ‡å®šçš„æ—¶é—´æ®µ
-        * std::chrono::seconds(10)ï¼šè¿™æ˜¯<chrono>å¤´æ–‡ä»¶ä¸­çš„ä¸€ä¸ªæ—¶é—´é•¿åº¦è¡¨ç¤ºï¼Œè¡¨ç¤º10ç§’çš„æ—¶é—´é—´éš”ã€‚
-        * std::chronoå‘½åç©ºé—´æä¾›äº†è¡¨ç¤ºæ—¶é—´é—´éš”å’Œæ—¶é’Ÿçš„æ—¶é—´å•ä½ã€‚
-        */
+         * std::this_thread::sleep_for:Ê¹µ±Ç°Ïß³ÌÔİÍ£Ö´ĞĞÖ¸¶¨µÄÊ±¼ä¶Î
+         * std::chrono::seconds(10)£ºÕâÊÇ<chrono>Í·ÎÄ¼şÖĞµÄÒ»¸öÊ±¼ä³¤¶È±íÊ¾£¬±íÊ¾10ÃëµÄÊ±¼ä¼ä¸ô¡£
+         * std::chronoÃüÃû¿Õ¼äÌá¹©ÁË±íÊ¾Ê±¼ä¼ä¸ôºÍÊ±ÖÓµÄÊ±¼äµ¥Î»¡£
+         */
     }
 
+    // ÔÚÍË³öÖ®Ç°µÈ´ıÊı¾İ²É¼¯Ïß³Ì½áÊø
+    dataCollectionThread.join();
 
-    std::cout<<"data end"<<std::endl;
-    std::unique_ptr<FileSender> file_send = file_send->createNew(server, port, dir_path);
-    std::cout<<"file_send->start()"<<std::endl;
-    if (!file_send->start())
-    {
-        std::cerr << "Error: FileSend failed." << std::endl;
-        return 0;
-    }
-
+    // ÔÚÍË³öÖ®Ç°µÈ´ıÎÄ¼ş·¢ËÍÏß³Ì½áÊø
+    fileSenderThread.join();
     return 0;
 }
