@@ -1,4 +1,5 @@
 *.o
 *.json
 CMakeFiles
+build
 dataCapture

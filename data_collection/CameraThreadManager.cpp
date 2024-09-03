@@ -190,6 +190,7 @@ void CameraThreadManager::saveFramesWorker(std::queue<std::pair<cv::Mat, int>> &
 
 std::string CameraThreadManager::getCurrentDateTimeString()
 {
+    // 获取当前时间点
     auto now = std::chrono::system_clock::now();
     auto now_time_t = std::chrono::system_clock::to_time_t(now);
     auto now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
@@ -207,27 +208,27 @@ std::string CameraThreadManager::getCurrentDateTimeString()
 
 void CameraThreadManager::saveFrames(std::queue<std::pair<cv::Mat, int>> &frameQueue, const std::string &currentDateTime, const std::string &cameraName)
 {
-    // 获取当前工作目录的绝对路径
-    std::string baseDir = std::filesystem::current_path().string();
-
+    std::string baseDir = std::filesystem::current_path().string(); // 假设程序当前目录为基础目录
+    std::string carNumber = "0001";
     std::string curDateTime = currentDateTime.substr(0, 19);
     std::string msTime = currentDateTime.substr(20, 23); // 切割出毫秒
 
     static std::string preDataTime = "";
-    // static int frameNum = 1; // 序号
-    // if (preDataTime != currentDateTime)
-    // {
+    // static int frameNum = 1; // 序号，这里原本使用来对每秒的截图进行编号的，现在使用时间戳，就不能使用这个序号
+    // if (preDataTime != currentDateTime) {
     //     preDataTime = currentDateTime;
     //     frameNum = 1;
     // }
-    // else
-    // {
+    // else {
     //     frameNum++;
     // }
 
     //std::string folderPath = baseDir + "/dataCapture/Car" + carNumber + "/" + currentDateTime + "/" + cameraName;
     std::string folderPath = baseDir + "/dataCapture/Car" + carNumber + "/" + curDateTime ;
+
     fs::create_directories(folderPath);
+
+    static int CutScreenCount = 0;
 
     while (!frameQueue.empty())
     {
@@ -237,7 +238,14 @@ void CameraThreadManager::saveFrames(std::queue<std::pair<cv::Mat, int>> &frameQ
         // std::string filename = folderPath + "/Frame" + std::to_string(frameNum) + ".jpg";
         std::string filename = folderPath + "/" + cameraName + "-" + msTime + ".jpg";
         cv::imwrite(filename, frame);
-        std::cout << "Saved " << filename << std::endl;
+        // std::cout << "Saved " << filename << std::endl; // 打印每一次的保存信息
+        CutScreenCount++;
+        if(20 == CutScreenCount){
+            /* 设置每20次截图保存打印一次信息 */
+            CutScreenCount = 0;
+            std::cout << "20 Frames had saved! ..." << std::endl;
+            std::cout << "Lastest Frame is Saved " << filename << std::endl;
+        }
     }
     // 推送保存的目录路径到共享队列，并通知发送模块
     {

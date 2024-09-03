@@ -51,6 +51,5 @@ private:
     std::vector<bool> saveThreadsRunning; // 用于标志保存线程的运行状态
 
     std::vector<ThreadInfo> threadInfoList; // 用于保存线程 ID 和设备 ID 的列表
-    std::string carNumber = "0001"; // 车辆编号
 
 };

@@ -1,30 +1,34 @@
 cmake_minimum_required(VERSION 3.10)
 
-# ¶¨ÒåÏîÄ¿Ãû³Æ
+# å®šä¹‰é¡¹ç›®åç§°
 project ("VehicleClientProjV1.0")
 
-# ÉèÖÃC++±ê×¼
+# è®¾ç½®C++æ ‡å‡†
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pthread -g -O0 -w -Wno-deprecated-declarations")
+# å°†å¯æ‰§è¡Œæ–‡ä»¶è¾“å‡ºåˆ° æ ¹ç›®å½•
+# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin) åœ¨ build/bin ç›®å½•ä¸‹
+# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}) åœ¨buildç›®å½•ä¸‹
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR})
 
-# ²éÕÒ²¢ÅäÖÃÒÀÀµ¿â
+# æŸ¥æ‰¾å¹¶é…ç½®ä¾èµ–åº“
 find_package(Boost REQUIRED COMPONENTS system)
 find_package(OpenCV REQUIRED)
 find_package(PCL 1.2 REQUIRED)
 
-# °üº¬È«¾Ö°üº¬Ä¿Â¼
+# åŒ…å«å…¨å±€åŒ…å«ç›®å½•
 include_directories(${Boost_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS} ${PCL_INCLUDE_DIRS} /usr/include/boost)
 
-# °üº¬ÏîÄ¿µÄÍ·ÎÄ¼şÂ·¾¶
+# åŒ…å«é¡¹ç›®çš„å¤´æ–‡ä»¶è·¯å¾„
 include_directories(${CMAKE_SOURCE_DIR}/file_transfer ${CMAKE_SOURCE_DIR}/data_collection ${CMAKE_SOURCE_DIR}/shared)
 
-# »ñÈ¡ËùÓĞÔ´ÎÄ¼ş
+# è·å–æ‰€æœ‰æºæ–‡ä»¶
 file(GLOB FILE_TRANSFER_SOURCES ${CMAKE_SOURCE_DIR}/file_transfer/*.cpp)
 file(GLOB DATA_COLLECTION_SOURCES ${CMAKE_SOURCE_DIR}/data_collection/*.cpp)
 file(GLOB SHARED_SOURCES ${CMAKE_SOURCE_DIR}/shared/*.cpp)
 
-# ¶¨Òå×îÖÕµÄ¿ÉÖ´ĞĞÎÄ¼ş
+# å®šä¹‰æœ€ç»ˆçš„å¯æ‰§è¡Œæ–‡ä»¶
 add_executable(VehicleClient main.cpp ${FILE_TRANSFER_SOURCES} ${DATA_COLLECTION_SOURCES} ${SHARED_SOURCES})
 
-# Á´½Ó¿âµ½¿ÉÖ´ĞĞÎÄ¼ş
+# é“¾æ¥åº“åˆ°å¯æ‰§è¡Œæ–‡ä»¶
 target_link_libraries(VehicleClient ${Boost_LIBRARIES} ${OpenCV_LIBS} ${PCL_LIBRARIES} pthread ssl crypto)
