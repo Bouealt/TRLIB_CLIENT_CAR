@@ -223,8 +223,8 @@ void CameraThreadManager::saveFrames(std::queue<std::pair<cv::Mat, int>> &frameQ
     //     frameNum++;
     // }
 
-    //std::string folderPath = baseDir + "/dataCapture/Car" + carNumber + "/" + currentDateTime + "/" + cameraName;
-    std::string folderPath = baseDir + "/dataCapture/Car" + carNumber + "/" + curDateTime ;
+    // std::string folderPath = baseDir + "/dataCapture/Car" + carNumber + "/" + currentDateTime + "/" + cameraName;
+    std::string folderPath = baseDir + "/dataCapture/Car" + carNumber + "/" + curDateTime;
 
     fs::create_directories(folderPath);
 
@@ -240,19 +240,19 @@ void CameraThreadManager::saveFrames(std::queue<std::pair<cv::Mat, int>> &frameQ
         cv::imwrite(filename, frame);
         // std::cout << "Saved " << filename << std::endl; // 打印每一次的保存信息
         CutScreenCount++;
-        if(20 == CutScreenCount){
+        if (20 == CutScreenCount)
+        {
             /* 设置每20次截图保存打印一次信息 */
             CutScreenCount = 0;
             std::cout << "20 Frames had saved! ..." << std::endl;
             std::cout << "Lastest Frame is Saved " << filename << std::endl;
         }
     }
-    // 推送保存的目录路径到共享队列，并通知发送模块
     {
-        std::lock_guard<std::mutex> lock(directoryQueueMutex);
-        directoryQueue.push(folderPath);
+        std::lock_guard<std::mutex> lock(captureToProcessingQueueMutex);
+        captureToProcessingQueue.push(folderPath);   // 推送目录路径
+        captureToProcessingQueueCondition.notify_one(); // 通知处理模块有新数据
     }
-    directoryQueueCondition.notify_one(); // 通知发送模块
 }
 
 void CameraThreadManager::onDeviceChange(const std::vector<std::string> &newDevicePaths, const std::vector<std::string> &offDevicePaths)
