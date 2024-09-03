@@ -118,6 +118,16 @@
     "streambuf": "cpp",
     "thread": "cpp",
     "cinttypes": "cpp",
-    "typeinfo": "cpp"
-  }
+    "typeinfo": "cpp",
+    "queue": "cpp",
+    "bitset": "cpp",
+    "complex": "cpp",
+    "list": "cpp",
+    "map": "cpp",
+    "set": "cpp",
+    "optional": "cpp",
+    "typeindex": "cpp",
+    "variant": "cpp"
+  },
+  "C_Cpp.errorSquiggles": "disabled"
 }
