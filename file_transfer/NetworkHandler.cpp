@@ -46,50 +46,83 @@ bool NetworkHandler::connect()
         return false;
     }
     freeaddrinfo(res);
+    connected_ = true;
     return true;
+}
+void NetworkHandler::close()
+{
+    if (sockfd_ != -1)
+    {
+        ::close(sockfd_);
+        sockfd_ = -1;
+    }
+    connected_ = false;
+}
+
+bool NetworkHandler::isConnected() const
+{
+    return connected_;
 }
 
 void NetworkHandler::sendFile(IFileHandler &file_handler)
 {
-    std::string file_name = file_handler.fileName();
-    uint32_t name_length = file_name.size();
-    name_length = htonl(name_length);
-    send(sockfd_, &name_length, sizeof(name_length), 0);
-    send(sockfd_, file_name.c_str(), file_name.size(), 0);
-
-    size_t file_size = file_handler.fileSize();
-    uint32_t net_file_size = htonl(file_size);
-    send(sockfd_, &net_file_size, sizeof(net_file_size), 0);
-
-    std::ifstream file(file_handler.fileName(), std::ios::binary);
-    std::vector<char> buffer(CHUNK_SIZE);
-    size_t total_bytes_sent = 0;
-    while (total_bytes_sent < file_size)
+    if (!isConnected())
     {
-        file.read(buffer.data(), CHUNK_SIZE);
-        std::streamsize bytes_read = file.gcount();
-        if (bytes_read > 0)
-        {
-            send(sockfd_, buffer.data(), bytes_read, 0);
-            total_bytes_sent += bytes_read;
-
-            std::lock_guard<std::mutex> lock(mtx);
-            std::cout << "\rProgress: " << (100 * total_bytes_sent / file_size) << "%" << std::flush;
-        }
+        std::cerr << "Not connected to server." << std::endl;
+        if (onDisconnect_)
+            onDisconnect_(); // 如果连接断开，触发回调
+        return;
     }
-    std::cout << std::endl;
 
-    std::string md5_hash = file_handler.calculateMd5();
-    uint32_t hash_length = md5_hash.size();
-    hash_length = htonl(hash_length);
-    send(sockfd_, &hash_length, sizeof(hash_length), 0);
-    send(sockfd_, md5_hash.c_str(), md5_hash.size(), 0);
+    try
+    {
+        std::string file_name = file_handler.fileName();
+        uint32_t name_length = htonl(file_name.size());
+        send(sockfd_, &name_length, sizeof(name_length), 0);
+        send(sockfd_, file_name.c_str(), file_name.size(), 0);
 
-    std::lock_guard<std::mutex> lock(mtx);
-    std::cout << "Sent file: " << file_name << " (" << file_size << " bytes), MD5: " << md5_hash << std::endl;
+        size_t file_size = file_handler.fileSize();
+        uint32_t net_file_size = htonl(file_size);
+        send(sockfd_, &net_file_size, sizeof(net_file_size), 0);
+
+        std::ifstream file(file_handler.fileName(), std::ios::binary);
+        std::vector<char> buffer(CHUNK_SIZE);
+        size_t total_bytes_sent = 0;
+
+        while (total_bytes_sent < file_size)
+        {
+            file.read(buffer.data(), CHUNK_SIZE);
+            std::streamsize bytes_read = file.gcount();
+            if (bytes_read > 0)
+            {
+                if (send(sockfd_, buffer.data(), bytes_read, 0) == -1)
+                    throw std::runtime_error("Failed to send file data");
+
+                total_bytes_sent += bytes_read;
+
+                std::lock_guard<std::mutex> lock(mtx);
+                std::cout << "\rProgress: " << (100 * total_bytes_sent / file_size) << "%" << std::flush;
+            }
+        }
+        std::cout << std::endl;
+
+        std::string md5_hash = file_handler.calculateMd5();
+        uint32_t hash_length = htonl(md5_hash.size());
+        send(sockfd_, &hash_length, sizeof(hash_length), 0);
+        send(sockfd_, md5_hash.c_str(), md5_hash.size(), 0);
+
+        std::lock_guard<std::mutex> lock(mtx);
+        std::cout << "Sent file: " << file_name << " (" << file_size << " bytes), MD5: " << md5_hash << std::endl;
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "Error during file sending: " << e.what() << std::endl;
+        if (onDisconnect_)
+            onDisconnect_(); // 如果发生错误，触发断开连接回调
+    }
 }
 
-void NetworkHandler::close()
+void NetworkHandler::setDisconnectCallback(const std::function<void()> &callback)
 {
-    ::close(sockfd_);
+    onDisconnect_ = callback;
 }

@@ -224,7 +224,7 @@ void CameraThreadManager::saveFrames(std::queue<std::pair<cv::Mat, int>> &frameQ
     // }
 
     // std::string folderPath = baseDir + "/dataCapture/Car" + carNumber + "/" + currentDateTime + "/" + cameraName;
-    std::string folderPath = baseDir + "/dataCapture/Car" + carNumber + "/" + curDateTime;
+    std::string folderPath = baseDir + "/DataSet/Car" + carNumber + "/" + curDateTime;
 
     fs::create_directories(folderPath);
 

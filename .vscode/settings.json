@@ -128,7 +128,8 @@
     "optional": "cpp",
     "typeindex": "cpp",
     "variant": "cpp",
-    "regex": "cpp"
+    "regex": "cpp",
+    "*.ipp": "cpp"
   },
   "C_Cpp.errorSquiggles": "disabled"
 }

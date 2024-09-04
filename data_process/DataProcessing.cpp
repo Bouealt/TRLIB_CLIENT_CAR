@@ -16,7 +16,7 @@ std::unique_ptr<DataProcessing> DataProcessing::createNew()
     return std::make_unique<DataProcessing>();
 }
 
-void DataProcessing::processDirectories()
+bool DataProcessing::processDirectories()
 {
     std::regex regexPattern(R"(.*\/(\d{4}-\d{2}-\d{2})\/(\d{2}-\d{2}-\d{2}))");
     while (cKeepRunning)
@@ -29,7 +29,7 @@ void DataProcessing::processDirectories()
 
         if (!cKeepRunning && captureToProcessingQueue.empty())
         {
-            return;
+            return true; // 正常退出时返回true
         }
 
         // 从队列中获取目录路径
@@ -42,42 +42,57 @@ void DataProcessing::processDirectories()
         std::string baseDir, timeDir;
         if (std::regex_search(directoryPath, matches, regexPattern))
         {
-            base·Dir = matches[0].str(); // 完整的基准路径
+            baseDir = matches[0].str(); // 完整的基准路径
             timeDir = matches[2].str(); // 时间部分，用于文件夹命名
         }
         else
         {
             std::cerr << "Error: Unable to parse directory path for date and time." << std::endl;
-            continue;
+            return false; // 如果解析失败，返回false
         }
 
         // 查找并对齐图像
         std::map<int, std::map<std::string, std::string>> alignedImages;
 
-        for (const auto &entry : fs::directory_iterator(directoryPath))
+        try
         {
-            if (entry.is_regular_file())
+            for (const auto &entry : fs::directory_iterator(directoryPath))
             {
-                std::string filePath = entry.path().string();
-                std::regex filePattern(R"(.*\/(camera\d)-(\d{3})\.jpg$)");
-                std::smatch fileMatches;
-
-                if (std::regex_search(filePath, fileMatches, filePattern))
+                if (entry.is_regular_file())
                 {
-                    std::string cameraName = fileMatches[1].str();
-                    int milliseconds = std::stoi(fileMatches[2].str());
-                    int alignedMilliseconds = (milliseconds / timeWindow) * timeWindow;
+                    std::string filePath = entry.path().string();
+                    std::regex filePattern(R"(.*\/(camera\d)-(\d{3})\.jpg$)");
+                    std::smatch fileMatches;
 
-                    alignedImages[alignedMilliseconds][cameraName] = filePath;
+                    if (std::regex_search(filePath, fileMatches, filePattern))
+                    {
+                        std::string cameraName = fileMatches[1].str();
+                        int milliseconds = std::stoi(fileMatches[2].str());
+                        int alignedMilliseconds = (milliseconds / timeWindow) * timeWindow;
+
+                        alignedImages[alignedMilliseconds][cameraName] = filePath;
+                    }
                 }
             }
         }
-
+        catch (const std::exception &e)
+        {
+            std::cerr << "Error while processing directory: " << e.what() << std::endl;
+            return false; // 如果在处理过程中发生异常，返回false
+        }
         alignAndSaveImages(baseDir, alignedImages);
-        // 删除处理过的原始目录（如果需要）
-        fs::remove_all(directoryPath);
-
+        // 尝试删除处理过的原始目录（如果需要）
+        try
+        {
+            fs::remove_all(directoryPath);
+        }
+        catch (const std::exception &e)
+        {
+            std::cerr << "Error: Failed to remove directory: " << e.what() << std::endl;
+            return false; // 如果删除目录失败，返回false
+        }
     }
+    return true; // 处理正常完成，返回true
 }
 
 void DataProcessing::alignAndSaveImages(const std::string &baseDir, const std::map<int, std::map<std::string, std::string>> &alignedImages)

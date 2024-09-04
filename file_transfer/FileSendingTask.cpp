@@ -4,27 +4,27 @@
 
 void fileSendingTask(const std::string &server, int port)
 {
+    // 保持一个唯一的 FileSender 实例
     std::unique_ptr<FileSender> file_send = FileSender::createNew(server, port);
-
     while (cKeepRunning)
     {
         std::string directoryToSend;
-        int retryCount = 0;  // 初始化重试计数器
+        int retryCount = 0; // 初始化重试计数器
 
-        // 等待队列中有新的目录路径,控制作用域防止死锁
+        // 等待队列中有新的目录路径, 控制作用域防止死锁
         {
-            std::unique_lock<std::mutex> lock(directoryQueueMutex);
+            std::unique_lock<std::mutex> lock(processingToSendingQueueMutex);
             std::cout << "wait for data" << std::endl;
-            directoryQueueCondition.wait(lock, []
-                                { return !directoryQueue.empty() || !cKeepRunning; });
+            processingToSendingQueueCondition.wait(lock, []
+                                                   { return !processingToSendingQueue.empty() || !cKeepRunning; });
 
-            if (!cKeepRunning && directoryQueue.empty())
+            if (!cKeepRunning && processingToSendingQueue.empty())
             {
                 break; // 停止运行并且队列为空时退出
             }
 
-            directoryToSend = directoryQueue.front();
-            directoryQueue.pop();
+            directoryToSend = processingToSendingQueue.front();
+            processingToSendingQueue.pop();
         }
 
         // 尝试发送，最多重试三次
@@ -40,7 +40,7 @@ void fileSendingTask(const std::string &server, int port)
                 retryCount++;
                 if (retryCount < 3)
                 {
-                    std::this_thread::sleep_for(std::chrono::seconds(1)); // 等待5秒再重试
+                    std::this_thread::sleep_for(std::chrono::seconds(1)); // 等待1秒再重试
                 }
             }
         }
@@ -49,8 +49,6 @@ void fileSendingTask(const std::string &server, int port)
         if (!success && retryCount == 3)
         {
             std::cerr << "Failed to send directory: " << directoryToSend << " after 3 attempts, skipping." << std::endl;
-            // 你可以在这里选择日志记录或者其他错误处理机制
         }
     }
 }
-

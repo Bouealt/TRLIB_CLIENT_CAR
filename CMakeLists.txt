@@ -20,15 +20,16 @@ find_package(PCL 1.2 REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS} ${PCL_INCLUDE_DIRS} /usr/include/boost)
 
 # 包含项目的头文件路径
-include_directories(${CMAKE_SOURCE_DIR}/file_transfer ${CMAKE_SOURCE_DIR}/data_collection ${CMAKE_SOURCE_DIR}/shared)
+include_directories(${CMAKE_SOURCE_DIR}/file_transfer ${CMAKE_SOURCE_DIR}/data_collection ${CMAKE_SOURCE_DIR}/shared ${CMAKE_SOURCE_DIR}/data_process)
 
 # 获取所有源文件
 file(GLOB FILE_TRANSFER_SOURCES ${CMAKE_SOURCE_DIR}/file_transfer/*.cpp)
 file(GLOB DATA_COLLECTION_SOURCES ${CMAKE_SOURCE_DIR}/data_collection/*.cpp)
 file(GLOB SHARED_SOURCES ${CMAKE_SOURCE_DIR}/shared/*.cpp)
+file(GLOB DATA_PROCESS_SOURCES ${CMAKE_SOURCE_DIR}/data_process/*.cpp)
 
 # 定义最终的可执行文件
-add_executable(VehicleClient main.cpp ${FILE_TRANSFER_SOURCES} ${DATA_COLLECTION_SOURCES} ${SHARED_SOURCES})
+add_executable(VehicleClient main.cpp ${FILE_TRANSFER_SOURCES} ${DATA_COLLECTION_SOURCES} ${SHARED_SOURCES} ${DATA_PROCESS_SOURCES})
 
 # 链接库到可执行文件
 target_link_libraries(VehicleClient ${Boost_LIBRARIES} ${OpenCV_LIBS} ${PCL_LIBRARIES} pthread ssl crypto)

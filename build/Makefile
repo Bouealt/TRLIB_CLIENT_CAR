@@ -249,6 +249,54 @@ data_collection/radar_sim.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/VehicleClient.dir/build.make CMakeFiles/VehicleClient.dir/data_collection/radar_sim.cpp.s
 .PHONY : data_collection/radar_sim.cpp.s
 
+data_process/DataProcessing.o: data_process/DataProcessing.cpp.o
+.PHONY : data_process/DataProcessing.o
+
+# target to build an object file
+data_process/DataProcessing.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VehicleClient.dir/build.make CMakeFiles/VehicleClient.dir/data_process/DataProcessing.cpp.o
+.PHONY : data_process/DataProcessing.cpp.o
+
+data_process/DataProcessing.i: data_process/DataProcessing.cpp.i
+.PHONY : data_process/DataProcessing.i
+
+# target to preprocess a source file
+data_process/DataProcessing.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VehicleClient.dir/build.make CMakeFiles/VehicleClient.dir/data_process/DataProcessing.cpp.i
+.PHONY : data_process/DataProcessing.cpp.i
+
+data_process/DataProcessing.s: data_process/DataProcessing.cpp.s
+.PHONY : data_process/DataProcessing.s
+
+# target to generate assembly for a file
+data_process/DataProcessing.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VehicleClient.dir/build.make CMakeFiles/VehicleClient.dir/data_process/DataProcessing.cpp.s
+.PHONY : data_process/DataProcessing.cpp.s
+
+data_process/ProcessingTask.o: data_process/ProcessingTask.cpp.o
+.PHONY : data_process/ProcessingTask.o
+
+# target to build an object file
+data_process/ProcessingTask.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VehicleClient.dir/build.make CMakeFiles/VehicleClient.dir/data_process/ProcessingTask.cpp.o
+.PHONY : data_process/ProcessingTask.cpp.o
+
+data_process/ProcessingTask.i: data_process/ProcessingTask.cpp.i
+.PHONY : data_process/ProcessingTask.i
+
+# target to preprocess a source file
+data_process/ProcessingTask.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VehicleClient.dir/build.make CMakeFiles/VehicleClient.dir/data_process/ProcessingTask.cpp.i
+.PHONY : data_process/ProcessingTask.cpp.i
+
+data_process/ProcessingTask.s: data_process/ProcessingTask.cpp.s
+.PHONY : data_process/ProcessingTask.s
+
+# target to generate assembly for a file
+data_process/ProcessingTask.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VehicleClient.dir/build.make CMakeFiles/VehicleClient.dir/data_process/ProcessingTask.cpp.s
+.PHONY : data_process/ProcessingTask.cpp.s
+
 file_transfer/FileHandler.o: file_transfer/FileHandler.cpp.o
 .PHONY : file_transfer/FileHandler.o
 
@@ -417,6 +465,12 @@ help:
 	@echo "... data_collection/radar_sim.o"
 	@echo "... data_collection/radar_sim.i"
 	@echo "... data_collection/radar_sim.s"
+	@echo "... data_process/DataProcessing.o"
+	@echo "... data_process/DataProcessing.i"
+	@echo "... data_process/DataProcessing.s"
+	@echo "... data_process/ProcessingTask.o"
+	@echo "... data_process/ProcessingTask.i"
+	@echo "... data_process/ProcessingTask.s"
 	@echo "... file_transfer/FileHandler.o"
 	@echo "... file_transfer/FileHandler.i"
 	@echo "... file_transfer/FileHandler.s"
