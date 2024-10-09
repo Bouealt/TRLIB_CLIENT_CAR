@@ -6,7 +6,7 @@
 #include <future>
 #include "PerceptionDeviceManager.h"
 #include "CameraThreadManager.h"
-
+#include "Audio.h"
 class DataCollector
 {
 public:

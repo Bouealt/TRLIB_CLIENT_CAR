@@ -43,6 +43,9 @@ int main()
     std::thread fileSenderThread(fileSendingTask, server, port);
     std::thread processingThread(ProcessingTask);
 
+    AudioCapture audioCapture(44100, 512, 1, 200);  // 设置采样率、每缓冲帧数、声道、保存间隔
+    std::thread audioThread(&AudioCapture::start, &audioCapture);
+
     // // 测试时使用，持续10s
     // bool testFlag = true;
     // int testTime = 2;
@@ -73,6 +76,8 @@ int main()
     dataCollectionThread.join();
     fileSenderThread.join();
     processingThread.join();
+    audioThread.join();
+
     /*******************************测试用例***************************************************** */
 
     return 0;
