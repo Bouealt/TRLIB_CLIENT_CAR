@@ -6,15 +6,20 @@ project ("VehicleClientProjV1.0")
 # 设置C++标准
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pthread -g -O0 -w -Wno-deprecated-declarations")
-# 将可执行文件输出到 根目录
-# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin) 在 build/bin 目录下
-# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}) 在build目录下
+
+# 设置输出目录
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR})
 
 # 查找并配置依赖库
 find_package(Boost REQUIRED COMPONENTS system)
 find_package(OpenCV REQUIRED)
 find_package(PCL 1.2 REQUIRED)
+
+# 添加 PortAudio 库查找
+find_library(PORTAUDIO_LIB portaudio REQUIRED)
+if (NOT PORTAUDIO_LIB)
+    message(FATAL_ERROR "PortAudio library not found")
+endif()
 
 # 包含全局包含目录
 include_directories(${Boost_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS} ${PCL_INCLUDE_DIRS} /usr/include/boost)
@@ -32,4 +37,4 @@ file(GLOB DATA_PROCESS_SOURCES ${CMAKE_SOURCE_DIR}/data_process/*.cpp)
 add_executable(VehicleClient main.cpp ${FILE_TRANSFER_SOURCES} ${DATA_COLLECTION_SOURCES} ${SHARED_SOURCES} ${DATA_PROCESS_SOURCES})
 
 # 链接库到可执行文件
-target_link_libraries(VehicleClient ${Boost_LIBRARIES} ${OpenCV_LIBS} ${PCL_LIBRARIES} pthread ssl crypto)
+target_link_libraries(VehicleClient ${Boost_LIBRARIES} ${OpenCV_LIBS} ${PCL_LIBRARIES} ${PORTAUDIO_LIB} pthread ssl crypto)

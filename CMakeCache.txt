@@ -611,6 +611,9 @@ PNG_LIBRARY_RELEASE:FILEPATH=/usr/lib/x86_64-linux-gnu/libpng.so
 //Path to a file.
 PNG_PNG_INCLUDE_DIR:PATH=/usr/include
 
+//Path to a library.
+PORTAUDIO_LIB:FILEPATH=/usr/lib/x86_64-linux-gnu/libportaudio.so
+
 //The directory containing a CMake configuration file for Qhull.
 Qhull_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/Qhull
 
