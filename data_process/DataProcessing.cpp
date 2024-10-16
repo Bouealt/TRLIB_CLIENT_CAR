@@ -5,7 +5,6 @@
 #include <iostream>
 #include <sstream>
 
-namespace fs = std::filesystem;
 
 DataProcessing::DataProcessing() {}
 
@@ -18,7 +17,6 @@ std::unique_ptr<DataProcessing> DataProcessing::createNew()
 
 bool DataProcessing::processDirectories()
 {
-    std::regex regexPattern(R"(.*\/(\d{4}-\d{2}-\d{2})\/(\d{2}-\d{2}-\d{2}))");
     while (cKeepRunning)
     {
         std::unique_lock<std::mutex> lock(captureToProcessingQueueMutex);
@@ -33,96 +31,45 @@ bool DataProcessing::processDirectories()
         }
 
         // 从队列中获取目录路径
-        std::string directoryPath = captureToProcessingQueue.front();
+        SensorData tempData = captureToProcessingQueue.front();
         captureToProcessingQueue.pop();
         lock.unlock();
 
-        // 提取日期和时间部分作为基准路径
-        std::smatch matches;
-        std::string baseDir, timeDir;
-        if (std::regex_search(directoryPath, matches, regexPattern))
-        {
-            baseDir = matches[0].str(); // 完整的基准路径
-            timeDir = matches[2].str(); // 时间部分，用于文件夹命名
-        }
-        else
-        {
-            std::cerr << "Error: Unable to parse directory path for date and time." << std::endl;
-            return false; // 如果解析失败，返回false
-        }
+        // 解析时间戳，假设时间戳格式为 "YYYY-MM-DD HH-MM-SS-sss"，便于分类
+        std::string date = tempData.readable_timestamp.substr(0, 10); // "YYYY-MM-DD"
+        std::string time = tempData.readable_timestamp.substr(11);    // "HH-MM-SS-sss"
+        int milliseconds = std::stoi(time.substr(9, 3));
+        int timeWindowIndex = milliseconds / TIME_WINDOW_MS * TIME_WINDOW_MS;
+        // 生成时间窗口字符串（例如 "HH-MM-SS-000"）
+        std::string timeWindowStr = time.substr(0, 8) + "-" + std::to_string(timeWindowIndex).insert(0, 3 - std::to_string(timeWindowIndex).length(), '0');
 
-        // 查找并对齐图像
-        std::map<int, std::map<std::string, std::string>> alignedImages;
+        // 生成数据存储的键值（"YYYY-MM-DD HH-MM-SS-000"）
+        std::string key = date + " " + timeWindowStr;
 
-        try
-        {
-            for (const auto &entry : fs::directory_iterator(directoryPath))
-            {
-                if (entry.is_regular_file())
-                {
-                    std::string filePath = entry.path().string();
-                    std::regex filePattern(R"(.*\/(camera\d)-(\d{3})\.jpg$)");
-                    std::smatch fileMatches;
+        // 创建目标文件夹并将文件移动到相应的文件夹
+        std::string basePath = "Dataset/Car0001/" + date + "/" + timeWindowStr;
+        fs::create_directories(basePath);
 
-                    if (std::regex_search(filePath, fileMatches, filePattern))
-                    {
-                        std::string cameraName = fileMatches[1].str();
-                        int milliseconds = std::stoi(fileMatches[2].str());
-                        int alignedMilliseconds = (milliseconds / timeWindow) * timeWindow;
+        // 对每个传感器类型创建子文件夹并移动文件
+        std::string sensorFolderPath = basePath + "/" + tempData.sensor_type;
+        fs::create_directories(sensorFolderPath);
 
-                        alignedImages[alignedMilliseconds][cameraName] = filePath;
-                    }
-                }
-            }
+        // 生成目标文件路径
+        fs::path sourceFilePath(tempData.file_path);
+        fs::path destinationFilePath = fs::path(sensorFolderPath) / sourceFilePath.filename();
+
+        try {
+            fs::rename(sourceFilePath, destinationFilePath);
+            // std::cout << "Moved " << tempData.sensor_type << " file to " << destinationFilePath << "\n";
+        } catch (const fs::filesystem_error &e) {
+            std::cerr << "Error moving file: " << e.what() << "\n";
         }
-        catch (const std::exception &e)
-        {
-            std::cerr << "Error while processing directory: " << e.what() << std::endl;
-            return false; // 如果在处理过程中发生异常，返回false
-        }
-        alignAndSaveImages(baseDir, alignedImages);
-        // 尝试删除处理过的原始目录（如果需要）
-        try
-        {
-            fs::remove_all(directoryPath);
-        }
-        catch (const std::exception &e)
-        {
-            std::cerr << "Error: Failed to remove directory: " << e.what() << std::endl;
-            return false; // 如果删除目录失败，返回false
-        }
+        // // 将对齐后的文件夹路径推送到发送队列
+        // {
+        //     std::lock_guard<std::mutex> lock(processingToSendingQueueMutex);
+        //     processingToSendingQueue.push(basePath);
+        //     processingToSendingQueueCondition.notify_one();
+        // }
     }
     return true; // 处理正常完成，返回true
-}
-
-void DataProcessing::alignAndSaveImages(const std::string &baseDir, const std::map<int, std::map<std::string, std::string>> &alignedImages)
-{
-    for (const auto &entry : alignedImages)
-    {
-        int alignedMilliseconds = entry.first;
-        const auto &imageFiles = entry.second;
-
-        // 创建对齐后的目录，例如 "15-24-48-200"
-        std::ostringstream alignedDirStream;
-        alignedDirStream << baseDir << "-" << std::setw(3) << std::setfill('0') << alignedMilliseconds;
-        std::string alignedDir = alignedDirStream.str();
-        fs::create_directories(alignedDir);
-
-        for (const auto &imageEntry : imageFiles)
-        {
-            std::string cameraName = imageEntry.first;
-            std::string srcFilePath = imageEntry.second;
-            std::string dstFilePath = alignedDir + "/" + cameraName + ".jpg";
-
-            // 剪切并重命名图片文件（相当于移动文件）
-            fs::rename(srcFilePath, dstFilePath);
-        }
-
-        // 将对齐后的文件夹路径推送到发送队列
-        {
-            std::lock_guard<std::mutex> lock(processingToSendingQueueMutex);
-            processingToSendingQueue.push(alignedDir);
-            processingToSendingQueueCondition.notify_one();
-        }
-    }
 }

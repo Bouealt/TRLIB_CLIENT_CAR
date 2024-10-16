@@ -7,6 +7,7 @@
 #include "PerceptionDeviceManager.h"
 #include "CameraThreadManager.h"
 #include "Audio.h"
+#include "Imu.h"
 class DataCollector
 {
 public:

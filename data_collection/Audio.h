@@ -4,8 +4,11 @@
 #include <vector>
 #include <string>
 #include <portaudio.h>
+#include <filesystem>
+#include "../shared/SharedQueue.h"
 
 typedef short SAMPLE;
+namespace fs = std::filesystem;
 
 class AudioCapture {
 public:
@@ -15,8 +18,7 @@ public:
     void start();
     void stop();
     void saveAudioData(const std::string &filePath);
-    std::string getCurrentTime(bool folderFormat = true, bool includeMilliseconds = false);
-    void createDirectory(const std::string &dir);
+    std::string getCurrentTime();
 
 private:
     struct AudioData {
@@ -30,7 +32,6 @@ private:
     int numChannels;
     int saveIntervalMs;
     PaStream *stream;
-    int fileIndex;
     std::string baseDir;
     std::string currentSecondFolder;
 

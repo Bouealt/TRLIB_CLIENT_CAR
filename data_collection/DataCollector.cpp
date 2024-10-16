@@ -7,14 +7,12 @@ std::unique_ptr<DataCollector> DataCollector::createNew()
 
 // 数据采集-构造函数
 /*
-* 首先开启感知设备搜索类
-* 通过 m_PDmanager->getDevices() 获取当前系统插入设备，输入感知设备线程管理类中，开启线程
-*/
-DataCollector::DataCollector():
-    m_PDmanager(std::make_unique<PerceptionDeviceManager>()),
-    m_threadManager(std::make_unique<CameraThreadManager>(m_PDmanager->getDevices()))
+ * 首先开启感知设备搜索类
+ * 通过 m_PDmanager->getDevices() 获取当前系统插入设备，输入感知设备线程管理类中，开启线程
+ */
+DataCollector::DataCollector() : m_PDmanager(std::make_unique<PerceptionDeviceManager>()),
+                                 m_threadManager(std::make_unique<CameraThreadManager>(m_PDmanager->getDevices()))
 {
-
 }
 
 // 数据采集-析构函数
@@ -24,32 +22,34 @@ DataCollector::~DataCollector()
 }
 
 // 数据采集，主运行函数
-bool DataCollector::DataCollectorLoopStart(void )
+bool DataCollector::DataCollectorLoopStart(void)
 {
     try
     {
+        
+        // 图像采集
         m_threadManager->start(); // 启动线程
         // 打印当前初始化后，系统感知设备的线程信息
         const auto &threadInfoList = m_threadManager->getThreadInfoList();
-        if(threadInfoList.empty()){
+        if (threadInfoList.empty())
+        {
             std::cout << "No device is connected to the system." << std::endl;
         }
-        else{
+        else
+        {
             /* 打印初始化后已经连接到系统的设备线程详情 */
             for (const auto &info : threadInfoList)
             {
-                 std::cout << "ThreadName: " << info.threadName << "\tThread ID: " << info.threadID << " \tcontrols device: " << info.deviceID << std::endl;
+                std::cout << "ThreadName: " << info.threadName << "\tThread ID: " << info.threadID << " \tcontrols device: " << info.deviceID << std::endl;
             }
         }
-        
-        // 设置设备变化回调
-        m_PDmanager->setDeviceChangeCallback([this](const std::vector<std::string> &newDevices, const std::vector<std::string> &offDevices){ 
-                this->m_threadManager->onDeviceChange(newDevices, offDevices); 
-            });
-        /********************************************************************************************************
-        * 截止至此，数据采集部分的 感知设备检测 和 感知设备控制 线程启动完毕
-        ********************************************************************************************************/
 
+        // 设置设备变化回调
+        m_PDmanager->setDeviceChangeCallback([this](const std::vector<std::string> &newDevices, const std::vector<std::string> &offDevices)
+                                             { this->m_threadManager->onDeviceChange(newDevices, offDevices); });
+        /********************************************************************************************************
+         * 截止至此，数据采集部分的 感知设备检测 和 感知设备控制 线程启动完毕
+         ********************************************************************************************************/
 
         // // 主线程执行核心逻辑，根据传入的 totalSeconds 参数来计算需要循环的次数
         // const int intervalSeconds = 10;                  // 每次循环的时间间隔为10秒
@@ -69,7 +69,16 @@ bool DataCollector::DataCollectorLoopStart(void )
         //     std::this_thread::sleep_for(std::chrono::seconds(remainingSeconds));
         // }
         // std::cout << "Data collection completed successfully." << std::endl;
+        
+        // 音频采集
+        AudioCapture audioCapture(44100, 512, 1, 200); // 设置采样率、每缓冲帧数、声道、保存间隔 启动音频采样
+        std::thread audioThread(&AudioCapture::start, &audioCapture);
+        Imu imu;
+        std::thread imuThread(&Imu::activate, &imu);
 
+        imuThread.join();
+        // 在函数返回之前，等待音频采集线程完成
+        audioThread.join();
         return true; // 正常执行完成，返回true
     }
     catch (const std::exception &e)

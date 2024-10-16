@@ -224,7 +224,8 @@ void CameraThreadManager::saveFrames(std::queue<std::pair<cv::Mat, int>> &frameQ
     // }
 
     // std::string folderPath = baseDir + "/dataCapture/Car" + carNumber + "/" + currentDateTime + "/" + cameraName;
-    std::string folderPath = baseDir + "/DataSet/Car" + carNumber + "/" + curDateTime;
+    std::string folderPath = baseDir + "/dataCapture/Car" + carNumber + "/Camera/" + curDateTime;
+    // std::string folderPath = baseDir +  "/Camera/" + curDateTime;
 
     fs::create_directories(folderPath);
 
@@ -240,18 +241,26 @@ void CameraThreadManager::saveFrames(std::queue<std::pair<cv::Mat, int>> &frameQ
         cv::imwrite(filename, frame);
         // std::cout << "Saved " << filename << std::endl; // 打印每一次的保存信息
         CutScreenCount++;
-        if (20 == CutScreenCount)
+        // if (20 == CutScreenCount)
+        // {
+        //     /* 设置每20次截图保存打印一次信息 */
+        //     CutScreenCount = 0;
+        //     std::cout << "20 Frames had saved! ..." << std::endl;
+        //     std::cout << "Lastest Frame is Saved " << filename << std::endl;
+        // }
+        SensorData data;
+        data.sensor_type = "camera";
+        data.readable_timestamp = currentDateTime;
+        data.file_path = filename;
+        // // 打印 SensorData 结构体的内容
+        // std::cout << "Sensor Type: " << data.sensor_type << "\n"
+        //           << "Timestamp: " << data.readable_timestamp << "\n"
+        //           << "File Path: " << data.file_path << "\n";
         {
-            /* 设置每20次截图保存打印一次信息 */
-            CutScreenCount = 0;
-            std::cout << "20 Frames had saved! ..." << std::endl;
-            std::cout << "Lastest Frame is Saved " << filename << std::endl;
+            std::lock_guard<std::mutex> lock(captureToProcessingQueueMutex);
+            captureToProcessingQueue.push(data);            // 推送目录路径
+            captureToProcessingQueueCondition.notify_one(); // 通知处理模块有新数据
         }
-    }
-    {
-        std::lock_guard<std::mutex> lock(captureToProcessingQueueMutex);
-        captureToProcessingQueue.push(folderPath);   // 推送目录路径
-        captureToProcessingQueueCondition.notify_one(); // 通知处理模块有新数据
     }
 }
 

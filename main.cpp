@@ -40,11 +40,10 @@ int main()
     // 创建并启动数据采集线程
     std::thread dataCollectionThread(dataCollectionTask);
     // 创建并启动文件发送线程
-    std::thread fileSenderThread(fileSendingTask, server, port);
+    // std::thread fileSenderThread(fileSendingTask, server, port);
     std::thread processingThread(ProcessingTask);
 
-    AudioCapture audioCapture(44100, 512, 1, 200);  // 设置采样率、每缓冲帧数、声道、保存间隔
-    std::thread audioThread(&AudioCapture::start, &audioCapture);
+    
 
     // // 测试时使用，持续10s
     // bool testFlag = true;
@@ -74,9 +73,9 @@ int main()
 
     cKeepRunning = false;
     dataCollectionThread.join();
-    fileSenderThread.join();
+    // fileSenderThread.join();
     processingThread.join();
-    audioThread.join();
+    // audioThread.join();
 
     /*******************************测试用例***************************************************** */
 

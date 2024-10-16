@@ -225,6 +225,30 @@ data_collection/DataCollector.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/VehicleClient.dir/build.make CMakeFiles/VehicleClient.dir/data_collection/DataCollector.cpp.s
 .PHONY : data_collection/DataCollector.cpp.s
 
+data_collection/Imu.o: data_collection/Imu.cpp.o
+.PHONY : data_collection/Imu.o
+
+# target to build an object file
+data_collection/Imu.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VehicleClient.dir/build.make CMakeFiles/VehicleClient.dir/data_collection/Imu.cpp.o
+.PHONY : data_collection/Imu.cpp.o
+
+data_collection/Imu.i: data_collection/Imu.cpp.i
+.PHONY : data_collection/Imu.i
+
+# target to preprocess a source file
+data_collection/Imu.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VehicleClient.dir/build.make CMakeFiles/VehicleClient.dir/data_collection/Imu.cpp.i
+.PHONY : data_collection/Imu.cpp.i
+
+data_collection/Imu.s: data_collection/Imu.cpp.s
+.PHONY : data_collection/Imu.s
+
+# target to generate assembly for a file
+data_collection/Imu.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VehicleClient.dir/build.make CMakeFiles/VehicleClient.dir/data_collection/Imu.cpp.s
+.PHONY : data_collection/Imu.cpp.s
+
 data_collection/PerceptionDeviceManager.o: data_collection/PerceptionDeviceManager.cpp.o
 .PHONY : data_collection/PerceptionDeviceManager.o
 
@@ -486,6 +510,9 @@ help:
 	@echo "... data_collection/DataCollector.o"
 	@echo "... data_collection/DataCollector.i"
 	@echo "... data_collection/DataCollector.s"
+	@echo "... data_collection/Imu.o"
+	@echo "... data_collection/Imu.i"
+	@echo "... data_collection/Imu.s"
 	@echo "... data_collection/PerceptionDeviceManager.o"
 	@echo "... data_collection/PerceptionDeviceManager.i"
 	@echo "... data_collection/PerceptionDeviceManager.s"
