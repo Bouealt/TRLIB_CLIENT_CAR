@@ -5,6 +5,7 @@ project ("VehicleClientProjV1.0")
 
 # 设置C++标准
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pthread -g -O0 -w -Wno-deprecated-declarations")
 
 # 设置输出目录

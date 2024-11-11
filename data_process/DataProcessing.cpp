@@ -1,6 +1,5 @@
 #include "DataProcessing.h"
 #include "../shared/SharedQueue.h" // 假设 SharedQueue.h 包含在主项目中
-#include <filesystem>
 #include <regex>
 #include <iostream>
 #include <sstream>
@@ -48,11 +47,31 @@ bool DataProcessing::processDirectories()
 
         // 创建目标文件夹并将文件移动到相应的文件夹
         std::string basePath = "Dataset/Car0001/" + date + "/" + timeWindowStr;
-        fs::create_directories(basePath);
+        // fs::create_directories(basePath);
+        // 检查时间窗口文件夹是否存在，如果不存在则创建
+        if (!fs::exists(basePath))
+        {
+            fs::create_directories(basePath);
+
+            // 对每个传感器类型创建子文件夹（如果子文件夹不存在）
+            // 这里假设传感器类型保存在tempData.sensor_type
+            std::vector<std::string> sensorTypes = {"audio", "camera", "imu"}; // 假设有这些传感器类型，你可以根据实际情况替换
+            for (const auto& sensorType : sensorTypes)
+            {
+                std::string sensorFolderPath = basePath + "/" + sensorType;
+                if (!fs::exists(sensorFolderPath)) {
+                    fs::create_directories(sensorFolderPath);
+                }
+            }
+        }
 
         // 对每个传感器类型创建子文件夹并移动文件
         std::string sensorFolderPath = basePath + "/" + tempData.sensor_type;
-        fs::create_directories(sensorFolderPath);
+        // fs::create_directories(sensorFolderPath);
+        // 确保目标文件夹存在
+        if (!fs::exists(sensorFolderPath)) {
+            fs::create_directories(sensorFolderPath);
+        }
 
         // 生成目标文件路径
         fs::path sourceFilePath(tempData.file_path);

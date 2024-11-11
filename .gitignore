@@ -4,3 +4,5 @@ CMakeFiles
 build
 dataCapture
 Dataset
+CMakeCache.txt
+cmake_install.cmake

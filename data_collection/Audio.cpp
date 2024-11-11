@@ -24,18 +24,18 @@ AudioCapture::~AudioCapture()
 void AudioCapture::initPortAudio()
 {
     PaError err = Pa_Initialize();
-    if (err != paNoError)
-    {
-        std::cerr << "PortAudio error: " << Pa_GetErrorText(err) << std::endl;
-        throw std::runtime_error("Failed to initialize PortAudio.");
-    }
+    // if (err != paNoError)
+    // {
+    //     std::cerr << "PortAudio error: " << Pa_GetErrorText(err) << std::endl;
+    //     throw std::runtime_error("Failed to initialize PortAudio.");
+    // }
 
     err = Pa_OpenDefaultStream(&stream, numChannels, 0, paInt16, sampleRate, framesPerBuffer, recordCallback, &data);
-    if (err != paNoError)
-    {
-        std::cerr << "PortAudio error: " << Pa_GetErrorText(err) << std::endl;
-        throw std::runtime_error("Failed to open audio stream.");
-    }
+    // if (err != paNoError)
+    // {
+    //     std::cerr << "PortAudio error: " << Pa_GetErrorText(err) << std::endl;
+    //     throw std::runtime_error("Failed to open audio stream.");
+    // }
 }
 
 void AudioCapture::terminatePortAudio()

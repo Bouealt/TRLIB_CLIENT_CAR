@@ -106,6 +106,8 @@ cvInit:
     }
 }
 
+
+
 // void CameraThreadManager::removeDeviceAndThreads(const std::string& devicePath) {
 //     std::lock_guard<std::mutex> lock(queueMutex);
 //
