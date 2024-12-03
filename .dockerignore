@@ -1,3 +1,5 @@
+# 忽略 .git 目录
+.git
 *.o
 *.json
 CMakeFiles

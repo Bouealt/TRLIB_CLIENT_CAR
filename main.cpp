@@ -11,7 +11,6 @@ int main()
 {
 
     system("sudo chmod 666 /dev/ttyUSB0");
-    system("sudo chmod 666 /dev/video0");
     // 创建并启动数据采集线程
     std::thread dataCollectionThread(dataCollectionTask);
     // 创建并启动文件发送线程

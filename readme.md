@@ -19,7 +19,7 @@ TRLIB_CAR_CLIENT
 
 确保系统已满足以上版本要求，以下步骤将帮助完成项目的构建与运行。
 
-## 运行流程
+## 运行流程(配置本地环境后运行)
 
 ### 克隆项目并进入项目目录
 - git clone <git@github.com:Bouealt/TRLIB_CLIENT_CAR.git>
@@ -34,19 +34,32 @@ cmake .
 ### 编译项目
 make
 
-<!-- ### 给予运行权限
-sudo chmod 666 /dev/ttyUSB0 保证运行
-sudo chmod 666 /dev/video0 保证运行 -->
-
 ### 运行可执行文件（启动需要权限）
 ./VehicleClient
 
+<!-- ### 给予运行权限
+sudo chmod 666 /dev/ttyUSB0 保证运行
+sudo chmod 666 /dev/video0 保证运行 -->
+## 运行流程(使用docker镜像运行)
 
+### 构建Docker镜像
+docker build -t vehicle-client .
+
+### 运行Docker容器(挂载)
+docker run --rm -it \
+  --device=/dev/ttyUSB0 \
+  --device=/dev/video0 \
+  --privileged \
+  vehicle-client
+  
+<!-- 
+-v $(pwd):/app/data \  //挂载磁盘指令
+-->
+  
 
 ## 依赖库安装
 ### 安装CMake和GCC
-sudo apt update
-sudo apt install -y cmake gcc g++
+sudo apt update && sudo apt install -y cmake gcc g++
 
 ### 安装Boost库
 sudo apt install -y libboost-all-dev
