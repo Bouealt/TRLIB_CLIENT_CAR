@@ -1,0 +1,78 @@
+Helgrind日志模式分析报告
+分析文件: helgrind_log.txt
+找到的数据竞争总数: 674
+
+问题分类统计:
+  Uncategorized: 669 个问题
+  Queue: 5 个问题
+
+根本原因分析:
+  队列操作竞争: 5 个问题
+    建议解决方案: 使用线程安全队列或添加互斥锁保护队列操作
+
+按类别的问题详情:
+
+Uncategorized 类别 (669 个问题):
+  问题 1:
+    Race: read of size 8 bytes
+Thread 5 vs Thread 3
+Key functions in thread 5: std::unique_lock, __gthread_mutex_lock
+Key functions in thread 3: 
+
+  问题 2:
+    Race: write of size 8 bytes
+Thread 3 vs Thread 5
+Key functions in thread 3: std::unique_lock, __gthread_mutex_lock
+Key functions in thread 5: 
+
+  问题 3:
+    Race: write of size 8 bytes
+Thread 3 vs Thread 5
+Key functions in thread 3: std::unique_lock, __gthread_mutex_lock, PerceptionDeviceManager::detectDevices
+Key functions in thread 5: 
+
+  问题 4:
+    Race: write of size 8 bytes
+Thread 3 vs Thread 5
+Key functions in thread 3: std::unique_lock, __gthread_mutex_lock
+Key functions in thread 5: 
+
+  问题 5:
+    Race: write of size 8 bytes
+Thread 3 vs Thread 5
+Key functions in thread 3: std::unique_lock, __gthread_mutex_lock
+Key functions in thread 5: 
+
+  ... 以及其他 664 个问题
+
+Queue 类别 (5 个问题):
+  问题 1:
+    Race:  of size 0 bytes
+Thread  vs Thread 8
+Key functions in thread : g_queue_push_head
+Key functions in thread 8: 
+
+  问题 2:
+    Race:  of size 0 bytes
+Thread  vs Thread 
+Key functions in thread : g_queue_push_head
+Key functions in thread : 
+
+  问题 3:
+    Race:  of size 0 bytes
+Thread  vs Thread 6
+Key functions in thread : 
+Key functions in thread 6: g_queue_push_head
+
+  问题 4:
+    Race:  of size 0 bytes
+Thread  vs Thread 6
+Key functions in thread : 
+Key functions in thread 6: g_queue_push_head
+
+  问题 5:
+    Race:  of size 0 bytes
+Thread  vs Thread 12
+Key functions in thread : g_queue_push_head
+Key functions in thread 12: 
+

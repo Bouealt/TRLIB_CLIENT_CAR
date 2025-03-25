@@ -131,5 +131,6 @@
     "regex": "cpp",
     "*.ipp": "cpp"
   },
-  "C_Cpp.errorSquiggles": "disabled"
+  "C_Cpp.errorSquiggles": "disabled",
+  "DockerRun.DisableDockerrc": true
 }

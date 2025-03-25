@@ -6,11 +6,13 @@
 #include <portaudio.h>
 #include <filesystem>
 #include "../shared/SharedQueue.h"
+#include <atomic>
 
 typedef short SAMPLE;
 namespace fs = std::filesystem;
 
-class AudioCapture {
+class AudioCapture
+{
 public:
     AudioCapture(int sampleRate, int framesPerBuffer, int channels, int saveIntervalMs);
     ~AudioCapture();
@@ -20,10 +22,16 @@ public:
     void saveAudioData(const std::string &filePath);
     std::string getCurrentTime();
 
+    void setRunningFlag(std::atomic<bool> *flag)
+    {
+        runningFlag = flag;
+    }
+
 private:
-    struct AudioData {
+    struct AudioData
+    {
         std::vector<SAMPLE> recordedSamples;
-        int samplesPerInterval;  // 每次保存的采样数
+        int samplesPerInterval; // 每次保存的采样数
     };
 
     AudioData data;
@@ -34,10 +42,11 @@ private:
     PaStream *stream;
     std::string baseDir;
     std::string currentSecondFolder;
+    std::atomic<bool> * runningFlag = nullptr;  // 运行标志指针
 
     static int recordCallback(const void *inputBuffer, void *outputBuffer,
                               unsigned long framesPerBuffer,
-                              const PaStreamCallbackTimeInfo* timeInfo,
+                              const PaStreamCallbackTimeInfo *timeInfo,
                               PaStreamCallbackFlags statusFlags,
                               void *userData);
 

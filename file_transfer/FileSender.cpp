@@ -35,7 +35,7 @@ bool FileSender::reconnect()
     return true;
 }
 
-bool FileSender::start(fs::path dir_path)
+bool FileSender::start(fs::path file_path)
 {
     try
     {
@@ -49,20 +49,37 @@ bool FileSender::start(fs::path dir_path)
             }
             isConnected_ = true;
         }
-        // 遍历目录并处理每个文件
-        for (const auto &entry : fs::recursive_directory_iterator(dir_path))
+        // // 遍历目录并处理每个文件
+        // for (const auto &entry : fs::recursive_directory_iterator(file_path))
+        // {
+        //     if (fs::is_regular_file(entry))
+        //     {
+        //         std::unique_ptr<FileHandler> file_handler = FileHandler::createNew(entry.path());
+
+        //         // 发送文件
+        //         network_handler_->sendFile(*file_handler);
+        //     }
+        // }
+
+        // std::cout << "All files in directory sent successfully." << std::endl;
+        // return true;
+
+        // 检查是否是一个常规文件
+        if (fs::is_regular_file(file_path))
         {
-            if (fs::is_regular_file(entry))
-            {
-                std::unique_ptr<FileHandler> file_handler = FileHandler::createNew(entry.path());
+            std::unique_ptr<FileHandler> file_handler = FileHandler::createNew(file_path);
 
-                // 发送文件
-                network_handler_->sendFile(*file_handler);
-            }
+            // 发送文件
+            network_handler_->sendFile(*file_handler);
+
+            std::cout << "File sent successfully: " << file_path << std::endl;
+            return true;
         }
-
-        std::cout << "All files in directory sent successfully." << std::endl;
-        return true;
+        else
+        {
+            std::cerr << "Provided path is not a regular file: " << file_path << std::endl;
+            return false;
+        }
     }
     catch (const std::exception &e)
     {

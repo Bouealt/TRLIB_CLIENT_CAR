@@ -1,0 +1,34 @@
+数据竞争问题的建议解决方案
+
+3. 队列操作竞争解决方案:
+   - 实现线程安全的队列类
+   - 使用互斥锁和条件变量
+   - 实现示例代码:
+
+   template<typename T>
+   class ThreadSafeQueue {
+   private:
+       std::queue<T> queue;
+       mutable std::mutex mutex;
+       std::condition_variable cond;
+   
+   public:
+       void push(T value) {
+           std::lock_guard<std::mutex> lock(mutex);
+           queue.push(std::move(value));
+           cond.notify_one();
+       }
+       
+       bool tryPop(T& value) {
+           std::lock_guard<std::mutex> lock(mutex);
+           if(queue.empty()) {
+               return false;
+           }
+           value = std::move(queue.front());
+           queue.pop();
+           return true;
+       }
+       
+       // 更多方法...
+   };
+   

@@ -1,6 +1,6 @@
 #include "Audio.h"
-#include <sys/time.h> // °üº¬ÓÃÓÚ gettimeofday µÄÍ·ÎÄ¼þ
-#include <cstring>    // °üº¬ÓÃÓÚ strlen µÄÍ·ÎÄ¼þ
+#include <sys/time.h> // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ gettimeofday ï¿½ï¿½Í·ï¿½Ä¼ï¿½
+#include <cstring>    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ strlen ï¿½ï¿½Í·ï¿½Ä¼ï¿½
 #include <iostream>
 #include <fstream>
 #include <ctime>
@@ -12,7 +12,7 @@
 AudioCapture::AudioCapture(int sampleRate, int framesPerBuffer, int channels, int saveIntervalMs)
     : sampleRate(sampleRate), framesPerBuffer(framesPerBuffer), numChannels(channels), saveIntervalMs(saveIntervalMs), stream(nullptr)
 {
-    data.samplesPerInterval = sampleRate * saveIntervalMs / 1000; // Ã¿´Î±£´æµÄ²ÉÑùÊý
+    data.samplesPerInterval = sampleRate * saveIntervalMs / 1000; // Ã¿ï¿½Î±ï¿½ï¿½ï¿½Ä²ï¿½ï¿½ï¿½ï¿½ï¿½
 }
 
 AudioCapture::~AudioCapture()
@@ -51,7 +51,7 @@ void AudioCapture::terminatePortAudio()
 void AudioCapture::start()
 {
     initPortAudio();
-    // ¿ªÊ¼Â¼Òô
+    // ï¿½ï¿½Ê¼Â¼ï¿½ï¿½
     PaError err = Pa_StartStream(stream);
     if (err != paNoError)
     {
@@ -59,20 +59,24 @@ void AudioCapture::start()
         throw std::runtime_error("Failed to start audio stream.");
     }
 
-    std::string baseDir = std::filesystem::current_path().string(); // ¼ÙÉè³ÌÐòµ±Ç°Ä¿Â¼Îª»ù´¡Ä¿Â¼
+    std::string baseDir = std::filesystem::current_path().string(); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç°Ä¿Â¼Îªï¿½ï¿½ï¿½ï¿½Ä¿Â¼
 
     std::string lastSecond = "";
-    while (true)
+    while (!runningFlag || runningFlag->load())
     {
-        Pa_Sleep(saveIntervalMs); // Ã¿´ÎµÈ´ý±£´æ¼ä¸ô
+        Pa_Sleep(saveIntervalMs); // Ã¿ï¿½ÎµÈ´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
+        if (runningFlag && !runningFlag->load())
+        {
+            break;
+        }
         std::string currentDateTime = getCurrentTime();
         std::string curDateTime = currentDateTime.substr(0, 19);
-        std::string seconds = currentDateTime.substr(17, 2); // ÇÐ¸î³öÃë
-        std::string msTime = currentDateTime.substr(20, 23); // ÇÐ¸î³öºÁÃë
+        std::string seconds = currentDateTime.substr(17, 2); // ï¿½Ð¸ï¿½ï¿½ï¿½ï¿½
+        std::string msTime = currentDateTime.substr(20, 23); // ï¿½Ð¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
         std::string file_path = baseDir + "/dataCapture/Car0001/Audio/" + curDateTime;
-        // Èç¹ûÃëÊý¸Ä±ä£¬´´½¨ÐÂµÄÎÄ¼þ¼Ð
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ä£¬ï¿½ï¿½ï¿½ï¿½ï¿½Âµï¿½ï¿½Ä¼ï¿½ï¿½ï¿½
         if (seconds != lastSecond)
         {
             std::string folderPath = baseDir + "/dataCapture/Car0001/Audio/" + curDateTime;
@@ -82,7 +86,7 @@ void AudioCapture::start()
 
         std::string filename = file_path + "/audio" + "-" + msTime + ".wav";
 
-        // ±£´æµ±Ç°ÒôÆµÊý¾Ýµ½ÎÄ¼þ
+        // ï¿½ï¿½ï¿½æµ±Ç°ï¿½ï¿½Æµï¿½ï¿½ï¿½Ýµï¿½ï¿½Ä¼ï¿½
         saveAudioData(filename);
         // std::cout << "Saved audio to: " << filename << std::endl;
         SensorData audio_data;
@@ -90,17 +94,19 @@ void AudioCapture::start()
         audio_data.readable_timestamp = currentDateTime;
         audio_data.file_path = filename;
 
-        // // ´òÓ¡ SensorData ½á¹¹ÌåµÄÄÚÈÝ
+        // // ï¿½ï¿½Ó¡ SensorData ï¿½á¹¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         // std::cout << "Sensor Type: " << audio_data.sensor_type << "\n"
         //           << "Timestamp: " << audio_data.readable_timestamp << "\n"
         //           << "File Path: " << audio_data.file_path << "\n";
         {
             std::lock_guard<std::mutex> lock(captureToProcessingQueueMutex);
-            captureToProcessingQueue.push(audio_data);            // ÍÆËÍÄ¿Â¼Â·¾¶
-            captureToProcessingQueueCondition.notify_one(); // Í¨Öª´¦ÀíÄ£¿éÓÐÐÂÊý¾Ý
+            captureToProcessingQueue.push(audio_data);      // ï¿½ï¿½ï¿½ï¿½Ä¿Â¼Â·ï¿½ï¿½
+            captureToProcessingQueueCondition.notify_one(); // Í¨Öªï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         }
-        data.recordedSamples.clear(); // Çå³ýÒÑ¾­±£´æµÄÒôÆµÊý¾Ý
+        data.recordedSamples.clear(); // ï¿½ï¿½ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æµï¿½ï¿½ï¿½ï¿½
     }
+    
+    stop();
 }
 
 void AudioCapture::stop()
@@ -131,16 +137,17 @@ int AudioCapture::recordCallback(const void *inputBuffer, void *outputBuffer,
     return paContinue;
 }
 
-// ±£´æÒôÆµÊý¾ÝÎªWAVÎÄ¼þ
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æµï¿½ï¿½ï¿½ï¿½ÎªWAVï¿½Ä¼ï¿½
 void AudioCapture::saveAudioData(const std::string &filePath)
 {
     std::ofstream outFile(filePath, std::ios::binary);
-    if (!outFile.is_open()) {
+    if (!outFile.is_open())
+    {
         std::cerr << "Failed to open file for writing: " << filePath << std::endl;
         return;
     }
 
-    // Ð´Èë WAV ÎÄ¼þÍ·²¿
+    // Ð´ï¿½ï¿½ WAV ï¿½Ä¼ï¿½Í·ï¿½ï¿½
     outFile.write("RIFF", 4);
     uint32_t fileSize = 36 + data.recordedSamples.size() * sizeof(int16_t);
     outFile.write(reinterpret_cast<const char *>(&fileSize), 4);
@@ -166,27 +173,26 @@ void AudioCapture::saveAudioData(const std::string &filePath)
     uint32_t subchunk2Size = data.recordedSamples.size() * sizeof(int16_t);
     outFile.write(reinterpret_cast<const char *>(&subchunk2Size), 4);
 
-    // Ð´ÈëÒôÆµÊý¾Ý
+    // Ð´ï¿½ï¿½ï¿½ï¿½Æµï¿½ï¿½ï¿½ï¿½
     outFile.write(reinterpret_cast<const char *>(data.recordedSamples.data()), subchunk2Size);
     outFile.close();
 }
 
-
-// »ñÈ¡µ±Ç°Ê±¼ä£¬·µ»ØÎÄ¼þ¼Ð¸ñÊ½ "2024-10-09" ºÍÊ±¼ä´Á "14-24-34"
+// ï¿½ï¿½È¡ï¿½ï¿½Ç°Ê±ï¿½ä£¬ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½Ð¸ï¿½Ê½ "2024-10-09" ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ "14-24-34"
 std::string AudioCapture::getCurrentTime()
 {
-    // »ñÈ¡µ±Ç°Ê±¼äµã
+    // ï¿½ï¿½È¡ï¿½ï¿½Ç°Ê±ï¿½ï¿½ï¿½
     auto now = std::chrono::system_clock::now();
     auto now_time_t = std::chrono::system_clock::to_time_t(now);
     auto now_ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
 
-    // »ñÈ¡µ±Ç°Ê±¼äµÄtm½á¹¹
+    // ï¿½ï¿½È¡ï¿½ï¿½Ç°Ê±ï¿½ï¿½ï¿½tmï¿½á¹¹
     std::tm tm;
     localtime_r(&now_time_t, &tm);
 
-    // ½«Ê±¼äÐÅÏ¢¸ñÊ½»¯Îª×Ö·û´®
+    // ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½Ê½ï¿½ï¿½Îªï¿½Ö·ï¿½ï¿½ï¿½
     std::stringstream ss;
     ss << std::put_time(&tm, "%Y-%m-%d/%H-%M-%S") << '-' << std::setfill('0') << std::setw(3) << now_ms.count();
-    // std::cout << ss.str() << std::endl;     // ´òÓ¡µ±Ç°µÄÊ±¼ä£¬Ê±-·Ö-Ãë-ºÁÃë
+    // std::cout << ss.str() << std::endl;     // ï¿½ï¿½Ó¡ï¿½ï¿½Ç°ï¿½ï¿½Ê±ï¿½ä£¬Ê±-ï¿½ï¿½-ï¿½ï¿½-ï¿½ï¿½ï¿½ï¿½
     return ss.str();
 }

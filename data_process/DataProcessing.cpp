@@ -46,7 +46,7 @@ bool DataProcessing::processDirectories()
         std::string key = date + " " + timeWindowStr;
 
         // 创建目标文件夹并将文件移动到相应的文件夹
-        std::string basePath = "Dataset/Car0001/" + date + "/" + timeWindowStr;
+        std::string basePath = "Dataset/Car0002/" + date + "/" + timeWindowStr;
         // fs::create_directories(basePath);
         // 检查时间窗口文件夹是否存在，如果不存在则创建
         if (!fs::exists(basePath))
@@ -86,7 +86,7 @@ bool DataProcessing::processDirectories()
         // 将对齐后的文件夹路径推送到发送队列
         {
             std::lock_guard<std::mutex> lock(processingToSendingQueueMutex);
-            processingToSendingQueue.push(basePath);
+            processingToSendingQueue.push(destinationFilePath);
             processingToSendingQueueCondition.notify_one();
         }
     }

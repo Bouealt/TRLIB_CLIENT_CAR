@@ -1,0 +1,97 @@
+==28008== Memcheck, a memory error detector
+==28008== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==28008== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==28008== Command: ./VehicleClient
+==28008== Parent PID: 27895
+==28008== 
+==28008== 
+==28008== Process terminating with default action of signal 1 (SIGHUP)
+==28008==    at 0x5507115: __futex_abstimed_wait_common64 (futex-internal.c:57)
+==28008==    by 0x5507115: __futex_abstimed_wait_common (futex-internal.c:87)
+==28008==    by 0x5507115: __futex_abstimed_wait_cancelable64 (futex-internal.c:139)
+==28008==    by 0x5509A40: __pthread_cond_wait_common (pthread_cond_wait.c:503)
+==28008==    by 0x5509A40: pthread_cond_wait@@GLIBC_2.3.2 (pthread_cond_wait.c:627)
+==28008==    by 0x1384C0: void std::condition_variable::wait<DataProcessing::processDirectories()::{lambda()#1}>(std::unique_lock<std::mutex>&, DataProcessing::processDirectories()::{lambda()#1}) (condition_variable:103)
+==28008==    by 0x13771E: DataProcessing::processDirectories() (DataProcessing.cpp:24)
+==28008==    by 0x13A063: ProcessingTask() (ProcessingTask.cpp:8)
+==28008==    by 0x110E3B: void std::__invoke_impl<void, void (*)()>(std::__invoke_other, void (*&&)()) (invoke.h:61)
+==28008==    by 0x110D25: std::__invoke_result<void (*)()>::type std::__invoke<void (*)()>(void (*&&)()) (invoke.h:96)
+==28008==    by 0x110BE5: void std::thread::_Invoker<std::tuple<void (*)()> >::_M_invoke<0ul>(std::_Index_tuple<0ul>) (std_thread.h:259)
+==28008==    by 0x110B47: std::thread::_Invoker<std::tuple<void (*)()> >::operator()() (std_thread.h:266)
+==28008==    by 0x110B07: std::thread::_State_impl<std::thread::_Invoker<std::tuple<void (*)()> > >::_M_run() (std_thread.h:211)
+==28008==    by 0x521F252: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30)
+==28008==    by 0x550AAC2: start_thread (pthread_create.c:442)
+==28008== 
+==28008== HEAP SUMMARY:
+==28008==     in use at exit: 11,687,723 bytes in 76,826 blocks
+==28008==   total heap usage: 210,829 allocs, 134,003 frees, 262,708,706 bytes allocated
+==28008== 
+==28008== 112 bytes in 1 blocks are definitely lost in loss record 6,428 of 7,751
+==28008==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==28008==    by 0x1BDCA020: _snd_pcm_upmix_open (in /usr/lib/x86_64-linux-gnu/alsa-lib/libasound_module_pcm_upmix.so)
+==28008==    by 0x56F5F4F: ??? (in /usr/lib/x86_64-linux-gnu/libasound.so.2.0.0)
+==28008==    by 0x56F65CF: ??? (in /usr/lib/x86_64-linux-gnu/libasound.so.2.0.0)
+==28008==    by 0x5720CC8: snd_pcm_open (in /usr/lib/x86_64-linux-gnu/libasound.so.2.0.0)
+==28008==    by 0x488B7BC: ??? (in /usr/lib/x86_64-linux-gnu/libportaudio.so.2.0.0)
+==28008==    by 0x48909C1: ??? (in /usr/lib/x86_64-linux-gnu/libportaudio.so.2.0.0)
+==28008==    by 0x489132C: PaAlsa_Initialize (in /usr/lib/x86_64-linux-gnu/libportaudio.so.2.0.0)
+==28008==    by 0x488404D: Pa_Initialize (in /usr/lib/x86_64-linux-gnu/libportaudio.so.2.0.0)
+==28008==    by 0x1167D8: AudioCapture::initPortAudio() (Audio.cpp:26)
+==28008==    by 0x1168B8: AudioCapture::start() (Audio.cpp:53)
+==28008==    by 0x12CE26: void std::__invoke_impl<void, void (AudioCapture::*)(), AudioCapture*>(std::__invoke_memfun_deref, void (AudioCapture::*&&)(), AudioCapture*&&) (invoke.h:74)
+==28008== 
+==28008== 112 bytes in 1 blocks are definitely lost in loss record 6,429 of 7,751
+==28008==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==28008==    by 0x1BDCA020: _snd_pcm_upmix_open (in /usr/lib/x86_64-linux-gnu/alsa-lib/libasound_module_pcm_upmix.so)
+==28008==    by 0x56F5F4F: ??? (in /usr/lib/x86_64-linux-gnu/libasound.so.2.0.0)
+==28008==    by 0x56F65CF: ??? (in /usr/lib/x86_64-linux-gnu/libasound.so.2.0.0)
+==28008==    by 0x5720CC8: snd_pcm_open (in /usr/lib/x86_64-linux-gnu/libasound.so.2.0.0)
+==28008==    by 0x488B7E4: ??? (in /usr/lib/x86_64-linux-gnu/libportaudio.so.2.0.0)
+==28008==    by 0x48909C1: ??? (in /usr/lib/x86_64-linux-gnu/libportaudio.so.2.0.0)
+==28008==    by 0x489132C: PaAlsa_Initialize (in /usr/lib/x86_64-linux-gnu/libportaudio.so.2.0.0)
+==28008==    by 0x488404D: Pa_Initialize (in /usr/lib/x86_64-linux-gnu/libportaudio.so.2.0.0)
+==28008==    by 0x1167D8: AudioCapture::initPortAudio() (Audio.cpp:26)
+==28008==    by 0x1168B8: AudioCapture::start() (Audio.cpp:53)
+==28008==    by 0x12CE26: void std::__invoke_impl<void, void (AudioCapture::*)(), AudioCapture*>(std::__invoke_memfun_deref, void (AudioCapture::*&&)(), AudioCapture*&&) (invoke.h:74)
+==28008== 
+==28008== 1,360 bytes in 1 blocks are definitely lost in loss record 7,543 of 7,751
+==28008==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==28008==    by 0x21B568F7: _snd_pcm_vdownmix_open (in /usr/lib/x86_64-linux-gnu/alsa-lib/libasound_module_pcm_vdownmix.so)
+==28008==    by 0x56F5F4F: ??? (in /usr/lib/x86_64-linux-gnu/libasound.so.2.0.0)
+==28008==    by 0x56F65CF: ??? (in /usr/lib/x86_64-linux-gnu/libasound.so.2.0.0)
+==28008==    by 0x5720CC8: snd_pcm_open (in /usr/lib/x86_64-linux-gnu/libasound.so.2.0.0)
+==28008==    by 0x488B7BC: ??? (in /usr/lib/x86_64-linux-gnu/libportaudio.so.2.0.0)
+==28008==    by 0x48909C1: ??? (in /usr/lib/x86_64-linux-gnu/libportaudio.so.2.0.0)
+==28008==    by 0x489132C: PaAlsa_Initialize (in /usr/lib/x86_64-linux-gnu/libportaudio.so.2.0.0)
+==28008==    by 0x488404D: Pa_Initialize (in /usr/lib/x86_64-linux-gnu/libportaudio.so.2.0.0)
+==28008==    by 0x1167D8: AudioCapture::initPortAudio() (Audio.cpp:26)
+==28008==    by 0x1168B8: AudioCapture::start() (Audio.cpp:53)
+==28008==    by 0x12CE26: void std::__invoke_impl<void, void (AudioCapture::*)(), AudioCapture*>(std::__invoke_memfun_deref, void (AudioCapture::*&&)(), AudioCapture*&&) (invoke.h:74)
+==28008== 
+==28008== 1,360 bytes in 1 blocks are definitely lost in loss record 7,544 of 7,751
+==28008==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==28008==    by 0x21B568F7: _snd_pcm_vdownmix_open (in /usr/lib/x86_64-linux-gnu/alsa-lib/libasound_module_pcm_vdownmix.so)
+==28008==    by 0x56F5F4F: ??? (in /usr/lib/x86_64-linux-gnu/libasound.so.2.0.0)
+==28008==    by 0x56F65CF: ??? (in /usr/lib/x86_64-linux-gnu/libasound.so.2.0.0)
+==28008==    by 0x5720CC8: snd_pcm_open (in /usr/lib/x86_64-linux-gnu/libasound.so.2.0.0)
+==28008==    by 0x488B7E4: ??? (in /usr/lib/x86_64-linux-gnu/libportaudio.so.2.0.0)
+==28008==    by 0x48909C1: ??? (in /usr/lib/x86_64-linux-gnu/libportaudio.so.2.0.0)
+==28008==    by 0x489132C: PaAlsa_Initialize (in /usr/lib/x86_64-linux-gnu/libportaudio.so.2.0.0)
+==28008==    by 0x488404D: Pa_Initialize (in /usr/lib/x86_64-linux-gnu/libportaudio.so.2.0.0)
+==28008==    by 0x1167D8: AudioCapture::initPortAudio() (Audio.cpp:26)
+==28008==    by 0x1168B8: AudioCapture::start() (Audio.cpp:53)
+==28008==    by 0x12CE26: void std::__invoke_impl<void, void (AudioCapture::*)(), AudioCapture*>(std::__invoke_memfun_deref, void (AudioCapture::*&&)(), AudioCapture*&&) (invoke.h:74)
+==28008== 
+==28008== LEAK SUMMARY:
+==28008==    definitely lost: 2,944 bytes in 4 blocks
+==28008==    indirectly lost: 0 bytes in 0 blocks
+==28008==      possibly lost: 3,918,377 bytes in 5,398 blocks
+==28008==    still reachable: 7,709,866 bytes in 71,127 blocks
+==28008==                       of which reachable via heuristic:
+==28008==                         newarray           : 3,096 bytes in 3 blocks
+==28008==         suppressed: 0 bytes in 0 blocks
+==28008== Reachable blocks (those to which a pointer was found) are not shown.
+==28008== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==28008== 
+==28008== For lists of detected and suppressed errors, rerun with: -s
+==28008== ERROR SUMMARY: 247 errors from 247 contexts (suppressed: 0 from 0)

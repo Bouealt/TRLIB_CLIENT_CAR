@@ -7,20 +7,23 @@
 #include "PerceptionDeviceManager.h"
 #include "CameraThreadManager.h"
 #include "Audio.h"
+#include <signal.h>
+#include <atomic>
 #include "Imu.h"
+
+
+void setupSignalHandlers();
 class DataCollector
 {
 public:
     static std::unique_ptr<DataCollector> createNew();
     DataCollector();
     ~DataCollector();
-    bool DataCollectorLoopStart(void );
+    bool DataCollectorLoopStart(void);
 
 private:
     std::unique_ptr<PerceptionDeviceManager> m_PDmanager;
     std::unique_ptr<CameraThreadManager> m_threadManager;
-
 };
-
 
 #endif // DATA_COLLECTOR_H

@@ -1,0 +1,31 @@
+==51093==    by 0x110B27: std::thread::_Invoker<std::tuple<void (*)(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int), std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, int> >::operator()() (std_thread.h:266)
+==51093==    by 0x110AE3: std::thread::_State_impl<std::thread::_Invoker<std::tuple<void (*)(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int), std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, int> > >::_M_run() (std_thread.h:211)
+==51093==    by 0x5226252: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30)
+==51093==  Address 0x1563a0 is 0 bytes inside data symbol "processingToSendingQueueMutex"
+==51093== 
+==51093== Possible data race during write of size 8 at 0x5373558 by thread #3
+==51093== Locks held: none
+==51093==    at 0x5286AE0: std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30)
+==51093==    by 0x1315B2: PerceptionDeviceManager::detectDevices() (PerceptionDeviceManager.cpp:117)
+==51093==    by 0x132C8F: void std::__invoke_impl<void, void (PerceptionDeviceManager::*)(), PerceptionDeviceManager*>(std::__invoke_memfun_deref, void (PerceptionDeviceManager::*&&)(), PerceptionDeviceManager*&&) (invoke.h:74)
+==51093==    by 0x132BE2: std::__invoke_result<void (PerceptionDeviceManager::*)(), PerceptionDeviceManager*>::type std::__invoke<void (PerceptionDeviceManager::*)(), PerceptionDeviceManager*>(void (PerceptionDeviceManager::*&&)(), PerceptionDeviceManager*&&) (invoke.h:96)
+==51093==    by 0x132B42: void std::thread::_Invoker<std::tuple<void (PerceptionDeviceManager::*)(), PerceptionDeviceManager*> >::_M_invoke<0ul, 1ul>(std::_Index_tuple<0ul, 1ul>) (std_thread.h:259)
+==51093==    by 0x132AF7: std::thread::_Invoker<std::tuple<void (PerceptionDeviceManager::*)(), PerceptionDeviceManager*> >::operator()() (std_thread.h:266)
+==51093==    by 0x132AD7: std::thread::_State_impl<std::thread::_Invoker<std::tuple<void (PerceptionDeviceManager::*)(), PerceptionDeviceManager*> > >::_M_run() (std_thread.h:211)
+==51093==    by 0x5226252: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30)
+==51093==    by 0x485396A: ??? (in /usr/libexec/valgrind/vgpreload_helgrind-amd64-linux.so)
+==51093==    by 0x5511AC2: start_thread (pthread_create.c:442)
+==51093==    by 0x55A2A03: clone (clone.S:100)
+==51093== 
+==51093== This conflicts with a previous read of size 8 by thread #5
+==51093== Locks held: 1, at address 0x1563A0
+==51093==    at 0x5286A22: std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30)
+==51093==    by 0x5286EBA: std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30)
+==51093==    by 0x113F44: fileSendingTask(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int) (FileSendingTask.cpp:17)
+==51093==    by 0x110DE0: void std::__invoke_impl<void, void (*)(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int), std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, int>(std::__invoke_other, void (*&&)(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int), std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&, int&&) (invoke.h:61)
+==51093==    by 0x110CBF: std::__invoke_result<void (*)(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int), std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, int>::type std::__invoke<void (*)(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int), std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, int>(void (*&&)(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int), std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&&, int&&) (invoke.h:96)
+==51093==    by 0x110BAE: void std::thread::_Invoker<std::tuple<void (*)(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int), std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, int> >::_M_invoke<0ul, 1ul, 2ul>(std::_Index_tuple<0ul, 1ul, 2ul>) (std_thread.h:259)
+==51093==    by 0x110B27: std::thread::_Invoker<std::tuple<void (*)(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int), std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, int> >::operator()() (std_thread.h:266)
+==51093==    by 0x110AE3: std::thread::_State_impl<std::thread::_Invoker<std::tuple<void (*)(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int), std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, int> > >::_M_run() (std_thread.h:211)
+==51093==  Address 0x5373558 is 24 bytes inside data symbol "_ZSt4cout"
+==51093== 

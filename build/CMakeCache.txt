@@ -306,7 +306,7 @@ LZMA_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/liblzma.so
 MPIEXEC_EXECUTABLE:FILEPATH=/usr/bin/mpiexec
 
 //Maximum number of processors available to run MPI applications.
-MPIEXEC_MAX_NUMPROCS:STRING=4
+MPIEXEC_MAX_NUMPROCS:STRING=8
 
 //Flag used by MPI to specify the number of processes for mpiexec;
 // the next option will be the number of processes.

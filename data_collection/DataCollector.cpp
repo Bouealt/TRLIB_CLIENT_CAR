@@ -1,5 +1,21 @@
 #include "DataCollector.h"
 
+std::atomic<bool> g_running(true);
+
+void signalHandler(int signum)
+{
+    std::cout << " 中断 " << signum << std::endl;
+    g_running.store(false);
+}
+
+// 设置信号处理器
+
+void setupSignalHandlers()
+{
+    signal(SIGINT, signalHandler);
+    signal(SIGTERM, signalHandler);
+}
+
 std::unique_ptr<DataCollector> DataCollector::createNew()
 {
     return std::make_unique<DataCollector>();
@@ -26,7 +42,8 @@ bool DataCollector::DataCollectorLoopStart(void)
 {
     try
     {
-        
+        setupSignalHandlers();
+
         // 图像采集
         m_threadManager->start(); // 启动线程
         // 打印当前初始化后，系统感知设备的线程信息
@@ -69,21 +86,30 @@ bool DataCollector::DataCollectorLoopStart(void)
         //     std::this_thread::sleep_for(std::chrono::seconds(remainingSeconds));
         // }
         // std::cout << "Data collection completed successfully." << std::endl;
-        
+
         // 音频采集
         AudioCapture audioCapture(44100, 512, 1, 200); // 设置采样率、每缓冲帧数、声道、保存间隔 启动音频采样
-        std::thread audioThread(&AudioCapture::start, &audioCapture);
+        audioCapture.setRunningFlag(&g_running);
         Imu imu;
+        std::thread audioThread(&AudioCapture::start, &audioCapture);
         std::thread imuThread(&Imu::activate, &imu);
 
-        imuThread.join();
+        while (g_running.load())
+        {
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        }
+        // 防止线程泄漏
+        if (imuThread.joinable())
+            imuThread.join();
         // 在函数返回之前，等待音频采集线程完成
-        audioThread.join();
+        if (audioThread.joinable())
+            audioThread.join();
         return true; // 正常执行完成，返回true
     }
     catch (const std::exception &e)
     {
         std::cerr << "Exception caught in DataCollector::start: " << e.what() << std::endl;
+        g_running.store(false);
         return false; // 捕获异常并返回false
     }
 }
