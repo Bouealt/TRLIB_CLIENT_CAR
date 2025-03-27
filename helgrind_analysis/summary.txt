@@ -1,8 +1,8 @@
 === Helgrind日志分析 ===
 分析文件: helgrind_log.txt
-分析时间: Tue Mar 25 10:30:34 AM CST 2025
+分析时间: Thu Mar 27 01:47:43 PM CST 2025
 
-数据竞争总数: 674
+数据竞争总数: 514
 锁顺序问题: 3
 条件变量问题: 0
 未初始化内存访问: 0
@@ -14,74 +14,74 @@ imu 相关数据竞争: 0
 mic 相关数据竞争: 0
 network 相关数据竞争: 0
 file 相关数据竞争: 0
-thread 相关数据竞争: 674
+thread 相关数据竞争: 514
 mutex 相关数据竞争: 0
 queue 相关数据竞争: 0
 
 === 最常见的调用栈模式 ===
-    673 --
-    566 ==51093== Locks held: none
-    145 ==51093==    by 0x9AB425B: ??? (in /usr/lib/x86_64-linux-gnu/libtbb.so.2)
-    137 ==51093==    by 0x9AB3F14: ??? (in /usr/lib/x86_64-linux-gnu/libtbb.so.2)
-     49 ==51093==    by 0x9AAD9D6: ??? (in /usr/lib/x86_64-linux-gnu/libtbb.so.2)
-     42 ==51093==    by 0x9AB1B27: ??? (in /usr/lib/x86_64-linux-gnu/libtbb.so.2)
-     40 ==51093==    by 0x9AAD935: ??? (in /usr/lib/x86_64-linux-gnu/libtbb.so.2)
-     37 ==51093==    by 0x9AAC077: ??? (in /usr/lib/x86_64-linux-gnu/libtbb.so.2)
-     35 ==51093==    by 0x485396A: ??? (in /usr/libexec/valgrind/vgpreload_helgrind-amd64-linux.so)
-     33 ==51093==    by 0x9AB339C: ??? (in /usr/lib/x86_64-linux-gnu/libtbb.so.2)
+    513 --
+    309 ==3595189== Locks held: none
+    138 ==3595189== Locks held: 1, at address 0x16317E78
+    111 ==3595189==    by 0x9AB425B: ??? (in /usr/lib/x86_64-linux-gnu/libtbb.so.2)
+    105 ==3595189==    by 0x9AB3F14: ??? (in /usr/lib/x86_64-linux-gnu/libtbb.so.2)
+     48 ==3595189==    by 0x9AB1B27: ??? (in /usr/lib/x86_64-linux-gnu/libtbb.so.2)
+     40 ==3595189==    by 0x9AAD935: ??? (in /usr/lib/x86_64-linux-gnu/libtbb.so.2)
+     34 ==3595189==    by 0x9AAC077: ??? (in /usr/lib/x86_64-linux-gnu/libtbb.so.2)
+     34 ==3595189==    by 0x485396A: ??? (in /usr/libexec/valgrind/vgpreload_helgrind-amd64-linux.so)
+     31 ==3595189==    by 0x9AA868C: ??? (in /usr/lib/x86_64-linux-gnu/libtbb.so.2)
 
 === 项目代码中的热点问题 ===
-    128 CameraThreadManager.cpp:66
-     28 PerceptionDeviceManager.cpp:108
-     22 CameraThreadManager.cpp:82
-     18 DataCollectionTask.cpp:9
-     16 DataCollector.cpp:21
-     13 FileSendingTask.cpp:17
+    358 DataCollector.cpp:20
+    358 DataCollectionTask.cpp:8
+    179 DataCollector.cpp:36
+    179 DataCollector.cpp:35
+    179 CameraManager.cpp:92
+     43 CameraManager.cpp:288
+     35 CameraManager.cpp:103
+     33 CameraManager.cpp:259
+     29 CameraManager.cpp:208
+     28 DataCollector.cpp:52
+     17 DataCollectionTask.cpp:9
+     15 FileSendingTask.cpp:17
      13 FileSendingTask.cpp:16
-     12 DataCollectionTask.cpp:8
-     11 DataCollector.cpp:60
-     11 DataCollector.cpp:30
-     11 CameraThreadManager.cpp:243
-     10 FileSendingTask.cpp:35
-      7 FileSender.cpp:73
-      7 CameraThreadManager.cpp:4
-      5 PerceptionDeviceManager.cpp:91
-      5 FileSendingTask.cpp:34
-      5 DataCollector.cpp:48
-      5 DataCollector.cpp:29
-      5 CameraThreadManager.cpp:26
-      5 CameraThreadManager.cpp:187
+     13 Audio.cpp:55
+     12 CameraManager.cpp:149
+     12 Audio.cpp:133
+     11 CameraManager.cpp:137
+     10 DataCollector.cpp:47
+     10 CameraManager.cpp:307
+      8 Audio.cpp:106
 
 === OpenCV相关问题分析 ===
-      4 ==51093== Possible data race during write of size 8 at 0x1D4A3A70 by thread #8
-      4 ==51093== Possible data race during write of size 1 at 0x1D4E397C by thread #6
-      3 ==51093== Possible data race during write of size 8 at 0x1D4E3940 by thread #6
-      3 ==51093== Possible data race during write of size 8 at 0x1D4E3920 by thread #6
-      3 ==51093== Possible data race during write of size 2 at 0x1D4A3A4A by thread #8
-      3 ==51093== Possible data race during write of size 1 at 0x1D4A3A48 by thread #8
-      3 ==51093== Possible data race during read of size 8 at 0x1D4A3A08 by thread #14
-      3 ==51093== Possible data race during read of size 8 at 0x19E86068 by thread #14
-      3 ==51093== Possible data race during read of size 1 at 0x1D4A3A48 by thread #8
-      2 ==51093== Possible data race during write of size 8 at 0x5FAFBA0 by thread #8
+      5 ==3595189== Possible data race during write of size 8 at 0x1E8AB970 by thread #10
+      4 ==3595189== Possible data race during write of size 1 at 0x1E8AB97C by thread #10
+      4 ==3595189== Possible data race during write of size 1 at 0x1E8AB948 by thread #10
+      4 ==3595189== Possible data race during read of size 1 at 0x1E8AB97C by thread #10
+      3 ==3595189== Possible data race during write of size 8 at 0x1E8AB940 by thread #10
+      3 ==3595189== Possible data race during write of size 2 at 0x1E8AB94A by thread #10
+      3 ==3595189== Possible data race during read of size 8 at 0x1AF94078 by thread #24
+      3 ==3595189== Possible data race during read of size 1 at 0x7D2929C by thread #7
+      3 ==3595189== Possible data race during read of size 1 at 0x1E8AB948 by thread #10
+      2 ==3595189== Possible data race during write of size 8 at 0x1E8AFD08 by thread #24
 
 === 竞争访问的内存地址分析 ===
-     62 Address 0x16567dc0
-     50 Address 0x164d50d0
-     49 Address 0x16567300
-     35 Address 0x164f8bc0
-     33 Address 0x164d0d60
-     23 Address 0x16502590
-     21 Address 0x16364240
-     19 Address 0x164ffe20
-     16 Address 0x15a8b680
-     14 Address 0x164ffbe0
-     13 Address 0x53747f8
-     13 Address 0x5373558
-     13 Address 0x1563a0
-     11 Address 0x1d4a3a48
-     11 Address 0x164f87b0
-     10 Address 0x1d4f3fb8
-     10 Address 0x16502ed0
-      9 Address 0x1d4f3fb0
-      8 Address 0x1d4ef5b0
-      8 Address 0x1d4ef5a8
+    179 Address 0x16317e78
+     73 Address 0x1648d580
+     38 Address 0x164b0b90
+     34 Address 0x164898f0
+     26 Address 0x164ba560
+     22 Address 0x1632fc40
+     20 Address 0x164b7df0
+     15 Address 0x164bce40
+     15 Address 0x164b7580
+     14 Address 0x164b7bb0
+     13 Address 0x15e3a0
+     11 Address 0x1e8ab948
+     11 Address 0x164b7d90
+     11 Address 0x164b0780
+     10 Address 0x1e8ab934
+      8 Address 0x1e8bbfb8
+      8 Address 0x1e8af500
+      8 Address 0x1e8ab97c
+      8 Address 0x1e8ab920
+      7 Address 0x48b4d48

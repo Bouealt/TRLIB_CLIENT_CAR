@@ -4,12 +4,14 @@
 #include <iostream>
 #include <thread>
 #include <future>
-#include "PerceptionDeviceManager.h"
-#include "CameraThreadManager.h"
+// #include "PerceptionDeviceManager.h"
+// #include "CameraThreadManager.h"
+#include "CameraManager.h"
 #include "Audio.h"
+#include "Imu.h"
 #include <signal.h>
 #include <atomic>
-#include "Imu.h"
+
 
 
 void setupSignalHandlers();
@@ -22,8 +24,9 @@ public:
     bool DataCollectorLoopStart(void);
 
 private:
-    std::unique_ptr<PerceptionDeviceManager> m_PDmanager;
-    std::unique_ptr<CameraThreadManager> m_threadManager;
+    // std::unique_ptr<PerceptionDeviceManager> m_PDmanager;
+    // std::unique_ptr<CameraThreadManager> m_threadManager;
+    std::unique_ptr<CameraManager> m_cameraManager;
 };
 
 #endif // DATA_COLLECTOR_H

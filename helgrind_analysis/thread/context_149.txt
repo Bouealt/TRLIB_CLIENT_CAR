@@ -1,0 +1,31 @@
+==3595189==    by 0x5DB31FA: ??? (in /usr/lib/x86_64-linux-gnu/libgstbase-1.0.so.0.2003.0)
+==3595189==    by 0x5F8DF82: g_type_create_instance (in /usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0.7200.4)
+==3595189==    by 0x5F750EC: ??? (in /usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0.7200.4)
+==3595189==  Block was alloc'd by thread #2
+==3595189== 
+==3595189== Possible data race during read of size 8 at 0x164BDF40 by thread #5
+==3595189== Locks held: none
+==3595189==    at 0x60153D9: g_queue_peek_tail_link (in /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.7200.4)
+==3595189==    by 0x5FD534B: ??? (in /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.7200.4)
+==3595189==    by 0x6037869: ??? (in /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.7200.4)
+==3595189==    by 0x6034AB0: ??? (in /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.7200.4)
+==3595189==    by 0x485396A: ??? (in /usr/libexec/valgrind/vgpreload_helgrind-amd64-linux.so)
+==3595189==    by 0x5511AC2: start_thread (pthread_create.c:442)
+==3595189==    by 0x55A2A03: clone (clone.S:100)
+==3595189== 
+==3595189== This conflicts with a previous write of size 8 by thread #2
+==3595189== Locks held: 4, at addresses 0x164898F0 0x1648D580 0x164B0780 0x164B0B90
+==3595189==    at 0x601504C: g_queue_push_head (in /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.7200.4)
+==3595189==    by 0x5FD511A: g_async_queue_push_unlocked (in /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.7200.4)
+==3595189==    by 0x603751F: g_thread_pool_push (in /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.7200.4)
+==3595189==    by 0x5EBFBEB: ??? (in /usr/lib/x86_64-linux-gnu/libgstreamer-1.0.so.0.2003.0)
+==3595189==    by 0x5EBF432: ??? (in /usr/lib/x86_64-linux-gnu/libgstreamer-1.0.so.0.2003.0)
+==3595189==    by 0x5EBF52C: gst_task_set_state (in /usr/lib/x86_64-linux-gnu/libgstreamer-1.0.so.0.2003.0)
+==3595189==    by 0x5E92406: gst_pad_start_task (in /usr/lib/x86_64-linux-gnu/libgstreamer-1.0.so.0.2003.0)
+==3595189==    by 0x5DB9E34: ??? (in /usr/lib/x86_64-linux-gnu/libgstbase-1.0.so.0.2003.0)
+==3595189==  Address 0x164bdf40 is 32 bytes inside a block of size 64 alloc'd
+==3595189==    at 0x484A919: malloc (in /usr/libexec/valgrind/vgpreload_helgrind-amd64-linux.so)
+==3595189==    by 0x600E738: g_malloc (in /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.7200.4)
+==3595189==    by 0x5FD4FA7: g_async_queue_new_full (in /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.7200.4)
+==3595189==    by 0x6036F5F: g_thread_pool_new_full (in /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.7200.4)
+==3595189==    by 0x5EB5622: ??? (in /usr/lib/x86_64-linux-gnu/libgstreamer-1.0.so.0.2003.0)

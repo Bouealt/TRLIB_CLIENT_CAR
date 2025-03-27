@@ -4,7 +4,6 @@ std::atomic<bool> g_running(true);
 
 void signalHandler(int signum)
 {
-    std::cout << " 中断 " << signum << std::endl;
     g_running.store(false);
 }
 
@@ -26,9 +25,15 @@ std::unique_ptr<DataCollector> DataCollector::createNew()
  * 首先开启感知设备搜索类
  * 通过 m_PDmanager->getDevices() 获取当前系统插入设备，输入感知设备线程管理类中，开启线程
  */
-DataCollector::DataCollector() : m_PDmanager(std::make_unique<PerceptionDeviceManager>()),
-                                 m_threadManager(std::make_unique<CameraThreadManager>(m_PDmanager->getDevices()))
+DataCollector::DataCollector()
 {
+    // m_PDmanager = PerceptionDeviceManager::createNew();
+    // m_threadManager = CameraThreadManager::createNew(m_PDmanager->getDevices());
+    // m_cameraManager = CameraManager::createNew(2);
+    // std::cout << "DataCollector created" << std::endl;
+    // 只创建摄像头管理器，但不查找设备也不启动
+    m_cameraManager = std::make_unique<CameraManager>(4);
+    m_cameraManager->setFrameProcessor([](const CameraFrame& frame){});
 }
 
 // 数据采集-析构函数
@@ -44,26 +49,38 @@ bool DataCollector::DataCollectorLoopStart(void)
     {
         setupSignalHandlers();
 
-        // 图像采集
-        m_threadManager->start(); // 启动线程
-        // 打印当前初始化后，系统感知设备的线程信息
-        const auto &threadInfoList = m_threadManager->getThreadInfoList();
-        if (threadInfoList.empty())
+        std::vector<std::string> devicePaths = m_cameraManager->discoverDevices();
+
+        if (devicePaths.empty())
         {
-            std::cout << "No device is connected to the system." << std::endl;
-        }
-        else
-        {
-            /* 打印初始化后已经连接到系统的设备线程详情 */
-            for (const auto &info : threadInfoList)
-            {
-                std::cout << "ThreadName: " << info.threadName << "\tThread ID: " << info.threadID << " \tcontrols device: " << info.deviceID << std::endl;
-            }
+            std::cerr << "No camera devices found." << std::endl;
         }
 
-        // 设置设备变化回调
-        m_PDmanager->setDeviceChangeCallback([this](const std::vector<std::string> &newDevices, const std::vector<std::string> &offDevices)
-                                             { this->m_threadManager->onDeviceChange(newDevices, offDevices); });
+        if(!m_cameraManager->start(devicePaths))
+        {
+            std::cerr << "Failed to start camera manager." << std::endl;
+            return false;
+        }
+        // // 图像采集
+        // m_threadManager->start(); // 启动线程
+        // // 打印当前初始化后，系统感知设备的线程信息
+        // const auto &threadInfoList = m_threadManager->getThreadInfoList();
+        // if (threadInfoList.empty())
+        // {
+        //     std::cout << "No device is connected to the system." << std::endl;
+        // }
+        // else
+        // {
+        //     /* 打印初始化后已经连接到系统的设备线程详情 */
+        //     for (const auto &info : threadInfoList)
+        //     {
+        //         std::cout << "ThreadName: " << info.threadName << "\tThread ID: " << info.threadID << " \tcontrols device: " << info.deviceID << std::endl;
+        //     }
+        // }
+
+        // // 设置设备变化回调
+        // m_PDmanager->setDeviceChangeCallback([this](const std::vector<std::string> &newDevices, const std::vector<std::string> &offDevices)
+        //                                      { this->m_threadManager->onDeviceChange(newDevices, offDevices); });
         /********************************************************************************************************
          * 截止至此，数据采集部分的 感知设备检测 和 感知设备控制 线程启动完毕
          ********************************************************************************************************/

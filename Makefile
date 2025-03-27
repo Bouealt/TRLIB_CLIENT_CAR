@@ -153,6 +153,30 @@ data_collection/Audio.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/VehicleClient.dir/build.make CMakeFiles/VehicleClient.dir/data_collection/Audio.cpp.s
 .PHONY : data_collection/Audio.cpp.s
 
+data_collection/CameraManager.o: data_collection/CameraManager.cpp.o
+.PHONY : data_collection/CameraManager.o
+
+# target to build an object file
+data_collection/CameraManager.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VehicleClient.dir/build.make CMakeFiles/VehicleClient.dir/data_collection/CameraManager.cpp.o
+.PHONY : data_collection/CameraManager.cpp.o
+
+data_collection/CameraManager.i: data_collection/CameraManager.cpp.i
+.PHONY : data_collection/CameraManager.i
+
+# target to preprocess a source file
+data_collection/CameraManager.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VehicleClient.dir/build.make CMakeFiles/VehicleClient.dir/data_collection/CameraManager.cpp.i
+.PHONY : data_collection/CameraManager.cpp.i
+
+data_collection/CameraManager.s: data_collection/CameraManager.cpp.s
+.PHONY : data_collection/CameraManager.s
+
+# target to generate assembly for a file
+data_collection/CameraManager.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/VehicleClient.dir/build.make CMakeFiles/VehicleClient.dir/data_collection/CameraManager.cpp.s
+.PHONY : data_collection/CameraManager.cpp.s
+
 data_collection/CameraThreadManager.o: data_collection/CameraThreadManager.cpp.o
 .PHONY : data_collection/CameraThreadManager.o
 
@@ -501,6 +525,9 @@ help:
 	@echo "... data_collection/Audio.o"
 	@echo "... data_collection/Audio.i"
 	@echo "... data_collection/Audio.s"
+	@echo "... data_collection/CameraManager.o"
+	@echo "... data_collection/CameraManager.i"
+	@echo "... data_collection/CameraManager.s"
 	@echo "... data_collection/CameraThreadManager.o"
 	@echo "... data_collection/CameraThreadManager.i"
 	@echo "... data_collection/CameraThreadManager.s"

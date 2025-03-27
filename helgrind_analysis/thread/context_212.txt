@@ -1,0 +1,31 @@
+==3595189==    by 0x5DB9E34: ??? (in /usr/lib/x86_64-linux-gnu/libgstbase-1.0.so.0.2003.0)
+==3595189==  Block was alloc'd by thread #2
+==3595189== 
+==3595189== ----------------------------------------------------------------
+==3595189== 
+==3595189== Possible data race during read of size 8 at 0x164BE660 by thread #5
+==3595189== Locks held: none
+==3595189==    at 0x6016FC8: g_queue_pop_tail (in /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.7200.4)
+==3595189==    by 0x5FD5360: ??? (in /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.7200.4)
+==3595189==    by 0x6037869: ??? (in /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.7200.4)
+==3595189==    by 0x6034AB0: ??? (in /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.7200.4)
+==3595189==    by 0x485396A: ??? (in /usr/libexec/valgrind/vgpreload_helgrind-amd64-linux.so)
+==3595189==    by 0x5511AC2: start_thread (pthread_create.c:442)
+==3595189==    by 0x55A2A03: clone (clone.S:100)
+==3595189==  Address 0x164be660 is 0 bytes inside a block of size 24 alloc'd
+==3595189==    at 0x484A919: malloc (in /usr/libexec/valgrind/vgpreload_helgrind-amd64-linux.so)
+==3595189==    by 0x600E738: g_malloc (in /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.7200.4)
+==3595189==    by 0x6025B74: g_slice_alloc (in /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.7200.4)
+==3595189==    by 0x60001E9: g_list_prepend (in /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.7200.4)
+==3595189==    by 0x6015034: g_queue_push_head (in /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.7200.4)
+==3595189==    by 0x5FD511A: g_async_queue_push_unlocked (in /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.7200.4)
+==3595189==    by 0x603751F: g_thread_pool_push (in /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.7200.4)
+==3595189==    by 0x5EBFBEB: ??? (in /usr/lib/x86_64-linux-gnu/libgstreamer-1.0.so.0.2003.0)
+==3595189==    by 0x5EBF432: ??? (in /usr/lib/x86_64-linux-gnu/libgstreamer-1.0.so.0.2003.0)
+==3595189==    by 0x5EBF52C: gst_task_set_state (in /usr/lib/x86_64-linux-gnu/libgstreamer-1.0.so.0.2003.0)
+==3595189==    by 0x5E92406: gst_pad_start_task (in /usr/lib/x86_64-linux-gnu/libgstreamer-1.0.so.0.2003.0)
+==3595189==    by 0x5DB9E34: ??? (in /usr/lib/x86_64-linux-gnu/libgstbase-1.0.so.0.2003.0)
+==3595189==  Block was alloc'd by thread #2
+==3595189== 
+==3595189== ----------------------------------------------------------------
+==3595189== 
